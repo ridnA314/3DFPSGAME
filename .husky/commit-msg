@@ -23,7 +23,7 @@ COMMIT_MSG=$(cat "$1")
 
 # 일반 커밋 메시지
 if echo "$COMMIT_MSG" | grep -qE \
-'^(asset|build|chore|docs|feat|fix|refactor|revert|design)(\(.+\))?!?: .+'; then
+'^(asset|test|build|chore|docs|feat|fix|refactor|revert|design)(\(.+\))?!?: .+'; then
     exit 0
 fi
 
