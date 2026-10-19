@@ -1127,6 +1127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
   _moveSpeedScalar: 7
+  _characterController: {fileID: 0}
 --- !u!143 &1424342458
 CharacterController:
   m_ObjectHideFlags: 0
