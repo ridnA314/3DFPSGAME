@@ -8,12 +8,18 @@ public class CameraRotate : MonoBehaviour
 
     private void Update()
     {
+        Rotate();
+    }
+
+    private void Rotate()
+    {
+        if (!Input.GetMouseButton(1)) return;
+
         //1. Input mouse
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
         //2. calculate rotate direction by using mouse input
-        //Vector3 direction = new Vector3(-mouseY, mouseX, 0f);
         // stock rotation angle by using mouse input
         _accumulationX += mouseX * GameConfig.RotationSpeedScalar * Time.deltaTime;
         _accumulationY += -mouseY * GameConfig.RotationSpeedScalar * Time.deltaTime;
@@ -23,18 +29,5 @@ public class CameraRotate : MonoBehaviour
 
         //4.Apply stock at Camera
         transform.eulerAngles = new Vector3(_accumulationY, _accumulationX, 0f);
-
-        /*
-        //3. rotate above direction
-        // new angle = current angle + angle speed * delta time
-        transform.eulerAngles += _rotationSpeedScalar * Time.deltaTime * direction;
-
-        //4. limit up/down rotation range -> -90~90
-        //but unity use 0~360 structure -> minus value change to plus value(360-value) by auto
-        Vector3 rotation = transform.eulerAngles;
-        //rotation.x = Mathf.Max(-90, Mathf.Min(90, rotation.x));
-        rotation.x = Mathf.Clamp(rotation.x, -90, 90);
-        transform.eulerAngles = rotation;
-        */
     }
 }
