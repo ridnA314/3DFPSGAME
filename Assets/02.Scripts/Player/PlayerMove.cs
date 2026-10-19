@@ -4,6 +4,15 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private float _moveSpeedScalar = 7f;
+    [SerializeField] private CharacterController _characterController;
+
+    private void Awake()
+    {
+        if (_characterController == null)
+        {
+            _characterController = GetComponent<CharacterController>();
+        }
+    }
 
     private void Update()
     {
@@ -19,6 +28,7 @@ public class PlayerMove : MonoBehaviour
         //world coordinate : based on world
 
         //3. move by speed and direction
-        transform.position += direction * (_moveSpeedScalar * Time.deltaTime);
+        //transform.position += direction * (_moveSpeedScalar * Time.deltaTime);
+        _characterController.Move(direction * (_moveSpeedScalar * Time.deltaTime));
     }
 }
