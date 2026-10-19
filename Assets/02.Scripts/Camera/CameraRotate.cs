@@ -1,10 +1,8 @@
 using UnityEngine;
 
 //Role : Rotate Camera when move mouse
-public class FpsCameraRotate : MonoBehaviour
+public class CameraRotate : MonoBehaviour
 {
-    [SerializeField] private float _rotationSpeedScalar = 200f;
-
     private float _accumulationX = 0f; //left/right angle
     private float _accumulationY = 0f; //up/down angle
 
@@ -17,8 +15,8 @@ public class FpsCameraRotate : MonoBehaviour
         //2. calculate rotate direction by using mouse input
         //Vector3 direction = new Vector3(-mouseY, mouseX, 0f);
         // stock rotation angle by using mouse input
-        _accumulationX += mouseX * _rotationSpeedScalar * Time.deltaTime;
-        _accumulationY += -mouseY * _rotationSpeedScalar * Time.deltaTime;
+        _accumulationX += mouseX * GameConfig.RotationSpeedScalar * Time.deltaTime;
+        _accumulationY += -mouseY * GameConfig.RotationSpeedScalar * Time.deltaTime;
 
         //3. limit rotation angle
         _accumulationY = Mathf.Clamp(_accumulationY, -90f, 90f);
