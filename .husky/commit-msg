@@ -1,0 +1,36 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+## husky task runner examples -------------------
+## Note : for local installation use 'dotnet' prefix. e.g. 'dotnet husky'
+
+## run all tasks
+#husky run
+
+### run all tasks with group: 'group-name'
+#husky run --group group-name
+
+## run task with name: 'task-name'
+#husky run --name task-name
+
+## pass hook arguments to task
+#husky run --args "$1" "$2"
+
+## or put your custom commands -------------------
+#echo 'Husky.Net is awesome!'
+
+COMMIT_MSG=$(cat "$1")
+
+# 일반 커밋 메시지
+if echo "$COMMIT_MSG" | grep -qE \
+'^(asset|build|chore|docs|feat|fix|refactor|revert|design)(\(.+\))?!?: .+'; then
+    exit 0
+fi
+
+# Git 기본 Merge commit 허용
+if echo "$COMMIT_MSG" | grep -qE '^Merge '; then
+    exit 0
+fi
+
+echo "커밋 메시지는 'type: 설명' 형식이어야 합니다."
+exit 1
