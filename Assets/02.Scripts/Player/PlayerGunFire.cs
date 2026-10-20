@@ -3,6 +3,8 @@ using UnityEngine;
 //mouse left button -> fire at center
 public class PlayerGunFire : MonoBehaviour
 {
+    [SerializeField] private ParticleSystem _hitEffectPrefab;
+
     private float _range = 100f;
     private float _damage = 10f;
 
@@ -28,8 +30,11 @@ public class PlayerGunFire : MonoBehaviour
         bool isHit = Physics.Raycast(ray, out hitInfo, _range);
         if (isHit)
         {
-            GameLogger.Log($"Hit {hitInfo.collider.name} by bullet, damage: {_damage}");
-            //ToDo: create effect
+            //GameLogger.Log($"Hit {hitInfo.collider.name} by bullet, damage: {_damage}");
+            ParticleSystem effect = Instantiate(_hitEffectPrefab);
+            effect.transform.position = hitInfo.point; // hit position
+            effect.transform.forward = hitInfo.normal;
+            effect.Play();
         }
     }
 }
