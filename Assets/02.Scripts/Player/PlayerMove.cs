@@ -5,10 +5,12 @@ public class PlayerMove : MonoBehaviour
 {
     private const float Gravity = -20f;
     private float _yVelocity = 0f; // vertical speed scalar, add per frame
+    private int _jumpCount = 0; // count of jump
 
     [SerializeField] private float _moveSpeedScalar = 7f;
     [SerializeField] private float _sprintSpeedScalar = 12f;
     [SerializeField] private float _jumpPower = 10f;
+    [SerializeField] private int _maxJumpCount = 2;
     [SerializeField] private CharacterController _characterController;
 
     private void Awake()
@@ -40,12 +42,15 @@ public class PlayerMove : MonoBehaviour
         else
         {
             _yVelocity = -1f;
+            _jumpCount = 0;
         }
 
         //4. If press jump key, Try Jump
-        if (Input.GetButtonDown("Jump") && _characterController.isGrounded)
+        //bool jumpCondition = (_jumpCount >= 1 && _jumpCount < _maxJumpCount) || (_)
+        if (Input.GetButtonDown("Jump") && _jumpCount < _maxJumpCount)
         {
             _yVelocity = _jumpPower;
+            _jumpCount++;
         }
 
         //5. calculate velocity
