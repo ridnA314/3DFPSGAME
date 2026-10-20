@@ -76,9 +76,13 @@ public class PlayerGunFire : MonoBehaviour
 
         _reloadTimer += Time.deltaTime * _reloadSpeed;
         _remainingAmmo = _currentAmmo + (int)((_magazineSize - _currentAmmo) * (_reloadTimer / _reloadTime));
-        if (_currentAmmo >= _magazineSize)
+        if (_remainingAmmo >= _magazineSize)
         {
-            _currentAmmo = _magazineSize;
+            _remainingAmmo = _magazineSize;
+        }
+
+        if (_reloadTimer >= _reloadTime)
+        {
             _isReloading = false;
         }
 
