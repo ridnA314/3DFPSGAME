@@ -9,9 +9,11 @@ public class PlayerGunFire : MonoBehaviour
     [SerializeField] private float _range = 100f;
     [SerializeField] private float _damage = 10f;
     [SerializeField] private int _magazineSize = 50;
+    public int MagazineSize => _magazineSize;
     [SerializeField] private float _reloadSpeed = 2f;
 
     private int _remainingAmmo;
+    public int RemainingAmmo => _remainingAmmo;
     private int _currentAmmo;
     private bool _isReloading = false;
 
@@ -69,12 +71,16 @@ public class PlayerGunFire : MonoBehaviour
 
     private void Reloading()
     {
+        if (!_isReloading) return;
+
         _reloadTimer += Time.deltaTime * _reloadSpeed;
         _remainingAmmo = _currentAmmo + (int)((_magazineSize - _currentAmmo) * (_reloadTimer / _reloadTime));
         if (_currentAmmo >= _magazineSize)
         {
             _currentAmmo = _magazineSize;
         }
+
+        UIManager.Instance?.RefreshAmmo();
     }
 
     private void TryReload()
@@ -95,5 +101,6 @@ public class PlayerGunFire : MonoBehaviour
     private void UseAmmo()
     {
         --_remainingAmmo;
+        UIManager.Instance?.RefreshAmmo();
     }
 }
