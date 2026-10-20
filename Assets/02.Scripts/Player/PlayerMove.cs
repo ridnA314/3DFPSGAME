@@ -7,6 +7,7 @@ public class PlayerMove : MonoBehaviour
     private float _yVelocity = 0f; // vertical speed scalar, add per frame
 
     [SerializeField] private float _moveSpeedScalar = 7f;
+    [SerializeField] private float _jumpPower = 10f;
     [SerializeField] private CharacterController _characterController;
 
     private void Awake()
@@ -30,14 +31,23 @@ public class PlayerMove : MonoBehaviour
         //local coordinate : based on one target
         //world coordinate : based on world
 
-        //3. stack gravity
-        _yVelocity += Gravity * Time.deltaTime;
+        //3. stack gravity, when is ground
+        if (!_characterController.isGrounded)
+        {
+            _yVelocity += Gravity * Time.deltaTime;
+        }=
 
-        //4. calculate velocity
+        //4. If press jump key, Try Jump
+        if (Input.GetButtonDown("Jump") && _characterController.isGrounded)
+        {
+            _yVelocity = _jumpPower;
+        }
+
+        //5. calculate velocity
         Vector3 velocity = direction * _moveSpeedScalar;
         velocity.y = _yVelocity;
 
-        //5. move by velocity
+        //6. move by velocity
         //transform.position += direction * (_moveSpeedScalar * Time.deltaTime);
         _characterController.Move(velocity * Time.deltaTime);
     }
