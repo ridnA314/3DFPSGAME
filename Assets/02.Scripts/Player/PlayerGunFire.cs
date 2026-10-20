@@ -3,17 +3,28 @@ using UnityEngine;
 //mouse left button -> fire at center
 public class PlayerGunFire : MonoBehaviour
 {
+    [Header("Stat")]
     [SerializeField] private ParticleSystem _hitEffectPrefab;
+    [SerializeField] private float _fireRate = 10f;
+    [SerializeField] private float _range = 100f;
+    [SerializeField] private float _damage = 10f;
 
-    private float _range = 100f;
-    private float _damage = 10f;
+    private const float _fireInterval = 1f;
+    private float _timer;
+
+    private void Start()
+    {
+        _timer = 0f;
+    }
 
     private void Update()
     {
+        _timer += Time.deltaTime * _fireRate;
         //1. mouse left click
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButton("Fire1") && _timer >= _fireInterval)
         {
             Shoot();
+            _timer = 0f;
         }
     }
 

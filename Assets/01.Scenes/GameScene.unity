@@ -1174,6 +1174,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerGunFire
   _hitEffectPrefab: {fileID: 19800002, guid: 54dd9cb5740188a488b8baebbf19207c, type: 3}
+  _fireRate: 5
+  _range: 100
+  _damage: 10
 --- !u!1 &1491553691
 GameObject:
   m_ObjectHideFlags: 0
