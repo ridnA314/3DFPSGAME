@@ -6,11 +6,17 @@ public class PlayerMove : MonoBehaviour
     private const float Gravity = -20f;
     private float _yVelocity = 0f; // vertical speed scalar, add per frame
     private int _jumpCount = 0; // count of jump
+    private float _stamina = 0f;
 
+    [SerializeField] private float _maxStamina = 100f;
     [SerializeField] private float _moveSpeedScalar = 7f;
     [SerializeField] private float _sprintSpeedScalar = 12f;
     [SerializeField] private float _jumpPower = 10f;
     [SerializeField] private int _maxJumpCount = 2;
+    [SerializeField] private float _staminaRecoveryPerSecond = 15f;
+    [SerializeField] private float _sprintStaminaCost = 10f;
+    [SerializeField] private float _jumpStaminaCost = 20f;
+
     [SerializeField] private CharacterController _characterController;
 
     private void Awake()
@@ -19,10 +25,15 @@ public class PlayerMove : MonoBehaviour
         {
             _characterController = GetComponent<CharacterController>();
         }
+
+        _stamina = _maxStamina;
     }
 
     private void Update()
     {
+        //0. recovery stamina
+        _stamina = Mathf.Min(_maxStamina, _stamina + Time.deltaTime * _staminaRecoveryPerSecond);
+
         //1. input keyboard
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
@@ -48,15 +59,27 @@ public class PlayerMove : MonoBehaviour
         //4. If press jump key, Try Jump
         bool jumpCondition = (_jumpCount >= 1 && _jumpCount < _maxJumpCount) ||
                              (_jumpCount < 1 && _characterController.isGrounded);
-        if (Input.GetButtonDown("Jump") && jumpCondition)
+        if (Input.GetButtonDown("Jump") && jumpCondition && _stamina >= _jumpStaminaCost)
         {
             _yVelocity = _jumpPower;
             _jumpCount++;
+            _stamina -= _jumpStaminaCost;
         }
 
         //5. calculate velocity
-        Vector3 velocity = direction;
-        velocity *= Input.GetButton("Sprint") ? _sprintSpeedScalar : _moveSpeedScalar;
+        bool wantSprint = Input.GetButton("Sprint");
+        float currentSpeed = _moveSpeedScalar;
+        if (wantSprint)
+        {
+            float needStaminaCost = _sprintStaminaCost * Time.deltaTime;
+            if (_stamina >= needStaminaCost)
+            {
+                currentSpeed = _sprintSpeedScalar;
+                _stamina -= needStaminaCost;
+            }
+        }
+
+        Vector3 velocity = direction * currentSpeed;
         velocity.y = _yVelocity;
 
         //6. move by velocity
