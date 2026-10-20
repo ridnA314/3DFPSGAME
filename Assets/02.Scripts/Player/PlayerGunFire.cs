@@ -20,7 +20,7 @@ public class PlayerGunFire : MonoBehaviour
     private const float _fireInterval = 1f;
     private float _timer;
 
-    private const float _reloadTime = 1f;
+    private const float _reloadTime = 10f;
     private float _reloadTimer;
 
     private void Start()

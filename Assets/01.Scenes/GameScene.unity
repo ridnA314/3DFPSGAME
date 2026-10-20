@@ -1361,7 +1361,7 @@ MonoBehaviour:
   _range: 100
   _damage: 10
   _magazineSize: 50
-  _reloadSpeed: 2
+  _reloadSpeed: 4
 --- !u!1 &1491553691
 GameObject:
   m_ObjectHideFlags: 0
