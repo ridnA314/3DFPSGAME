@@ -7,6 +7,7 @@ public class PlayerMove : MonoBehaviour
     private float _yVelocity = 0f; // vertical speed scalar, add per frame
 
     [SerializeField] private float _moveSpeedScalar = 7f;
+    [SerializeField] private float _runningSpeedScalar = 12f;
     [SerializeField] private float _jumpPower = 10f;
     [SerializeField] private CharacterController _characterController;
 
@@ -48,7 +49,16 @@ public class PlayerMove : MonoBehaviour
         }
 
         //5. calculate velocity
-        Vector3 velocity = direction * _moveSpeedScalar;
+        Vector3 velocity = direction;
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            velocity *= _runningSpeedScalar;
+        }
+        else
+        {
+            velocity *= _moveSpeedScalar;
+        }
+
         velocity.y = _yVelocity;
 
         //6. move by velocity
