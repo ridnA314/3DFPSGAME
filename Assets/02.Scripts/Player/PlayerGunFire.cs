@@ -21,6 +21,7 @@ public class PlayerGunFire : MonoBehaviour
     private float _timer;
 
     private const float _reloadTime = 10f;
+    private float _currentReloadTime = 10f;
     private float _reloadTimer;
 
     private void Start()
@@ -75,13 +76,14 @@ public class PlayerGunFire : MonoBehaviour
         if (!_isReloading) return;
 
         _reloadTimer += Time.deltaTime * _reloadSpeed;
-        _remainingAmmo = _currentAmmo + (int)((_magazineSize - _currentAmmo) * (_reloadTimer / _reloadTime));
+        _remainingAmmo = _currentAmmo + (int)((_magazineSize - _currentAmmo) * (_reloadTimer / _currentReloadTime));
+
         if (_remainingAmmo >= _magazineSize)
         {
             _remainingAmmo = _magazineSize;
         }
 
-        if (_reloadTimer >= _reloadTime)
+        if (_reloadTimer >= _currentReloadTime)
         {
             _isReloading = false;
         }
@@ -95,7 +97,8 @@ public class PlayerGunFire : MonoBehaviour
         {
             _isReloading = true;
             _currentAmmo = _remainingAmmo;
-            _reloadTimer = _reloadTime * ((float)_currentAmmo / _magazineSize);
+            _reloadTimer = 0f;
+            _currentReloadTime = _reloadTime * (1 - ((float)_currentAmmo / _magazineSize));
         }
     }
 
