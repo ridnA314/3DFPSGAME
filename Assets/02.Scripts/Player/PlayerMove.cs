@@ -7,6 +7,7 @@ public class PlayerMove : MonoBehaviour
     private float _yVelocity = 0f; // vertical speed scalar, add per frame
 
     [SerializeField] private float _moveSpeedScalar = 7f;
+    [SerializeField] private float _sprintSpeedScalar = 12f;
     [SerializeField] private float _jumpPower = 10f;
     [SerializeField] private CharacterController _characterController;
 
@@ -38,7 +39,7 @@ public class PlayerMove : MonoBehaviour
         }
         else
         {
-            _yVelocity = 0;
+            _yVelocity = -1f;
         }
 
         //4. If press jump key, Try Jump
@@ -48,7 +49,8 @@ public class PlayerMove : MonoBehaviour
         }
 
         //5. calculate velocity
-        Vector3 velocity = direction * _moveSpeedScalar;
+        Vector3 velocity = direction;
+        velocity *= Input.GetButton("Sprint") ? _sprintSpeedScalar : _moveSpeedScalar;
         velocity.y = _yVelocity;
 
         //6. move by velocity
