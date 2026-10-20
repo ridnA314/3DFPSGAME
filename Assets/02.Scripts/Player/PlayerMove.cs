@@ -46,8 +46,9 @@ public class PlayerMove : MonoBehaviour
         }
 
         //4. If press jump key, Try Jump
-        //bool jumpCondition = (_jumpCount >= 1 && _jumpCount < _maxJumpCount) || (_)
-        if (Input.GetButtonDown("Jump") && _jumpCount < _maxJumpCount)
+        bool jumpCondition = (_jumpCount >= 1 && _jumpCount < _maxJumpCount) ||
+                             (_jumpCount < 1 && _characterController.isGrounded);
+        if (Input.GetButtonDown("Jump") && jumpCondition)
         {
             _yVelocity = _jumpPower;
             _jumpCount++;
