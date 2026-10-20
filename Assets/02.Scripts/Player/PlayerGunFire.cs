@@ -28,6 +28,7 @@ public class PlayerGunFire : MonoBehaviour
         _timer = 0f;
         _reloadTimer = 0f;
         _remainingAmmo = _magazineSize;
+        UIManager.Instance?.RefreshAmmo();
     }
 
     private void Update()
@@ -78,6 +79,7 @@ public class PlayerGunFire : MonoBehaviour
         if (_currentAmmo >= _magazineSize)
         {
             _currentAmmo = _magazineSize;
+            _isReloading = false;
         }
 
         UIManager.Instance?.RefreshAmmo();
