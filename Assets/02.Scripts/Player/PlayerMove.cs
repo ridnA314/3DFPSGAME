@@ -36,6 +36,10 @@ public class PlayerMove : MonoBehaviour
         {
             _yVelocity += Gravity * Time.deltaTime;
         }
+        else
+        {
+            _yVelocity = 0;
+        }
 
         //4. If press jump key, Try Jump
         if (Input.GetButtonDown("Jump") && _characterController.isGrounded)
