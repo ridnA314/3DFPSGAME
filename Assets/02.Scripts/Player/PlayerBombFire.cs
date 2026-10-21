@@ -38,8 +38,8 @@ public class PlayerBombFire : MonoBehaviour
         if (Input.GetButtonUp("Fire2"))
         {
             _isCharging = false;
-            _chargeGauge = 0f;
             Shoot();
+            _chargeGauge = 0f;
         }
     }
 
