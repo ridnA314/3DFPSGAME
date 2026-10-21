@@ -12,7 +12,7 @@ public class PlayerRotate : MonoBehaviour
 
     private void Rotate()
     {
-        if (!Input.GetMouseButton(1)) return;
+        if (!Input.GetMouseButton(2)) return;
 
         float mouseX = Input.GetAxis("Mouse X");
         _accumulationX += mouseX * GameConfig.RotationSpeedScalar * Time.deltaTime;

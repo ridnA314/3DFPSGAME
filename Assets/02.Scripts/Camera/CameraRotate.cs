@@ -13,7 +13,7 @@ public class CameraRotate : MonoBehaviour
 
     private void Rotate()
     {
-        if (!Input.GetMouseButton(1)) return;
+        if (!Input.GetMouseButton(2)) return;
 
         //1. Input mouse
         float mouseX = Input.GetAxis("Mouse X");
