@@ -51,6 +51,7 @@ public class PlayerBombFire : MonoBehaviour
         Bomb bomb = BombPoolManager.Instance?.Get();
         if (bomb == null) return;
         bomb.transform.position = _firePoint.position;
+        bomb.transform.rotation = _firePoint.rotation;
 
         Rigidbody rigidbody = bomb.GetComponent<Rigidbody>();
         rigidbody.AddForce(Camera.main.transform.forward * (_throwPower * _chargeGauge), ForceMode.Impulse);
