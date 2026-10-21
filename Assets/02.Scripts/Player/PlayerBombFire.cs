@@ -40,6 +40,7 @@ public class PlayerBombFire : MonoBehaviour
             _isCharging = false;
             Shoot();
             _chargeGauge = 0f;
+            UIManager.Instance?.RefreshBombGauge();
         }
     }
 
