@@ -10,8 +10,8 @@ public class Bomb : MonoBehaviour
         ParticleSystem effect = Instantiate(_explosionEffectPrefab, transform.position, Quaternion.identity);
         effect.Play();
 
-        //Todo, apply object pooling
         //erase bomb
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        BombPoolManager.Instance?.Release(this);
     }
 }

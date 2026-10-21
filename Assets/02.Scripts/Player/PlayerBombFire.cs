@@ -48,7 +48,9 @@ public class PlayerBombFire : MonoBehaviour
     {
         if (_remainingBomb <= 0) return;
 
-        Bomb bomb = Instantiate(_bombPrefab, _firePoint.position, Quaternion.identity);
+        Bomb bomb = BombPoolManager.Instance?.Get();
+        if (bomb == null) return;
+        bomb.transform.position = _firePoint.position;
 
         Rigidbody rigidbody = bomb.GetComponent<Rigidbody>();
         rigidbody.AddForce(Camera.main.transform.forward * (_throwPower * _chargeGauge), ForceMode.Impulse);
