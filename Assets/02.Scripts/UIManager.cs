@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _bombText;
     [SerializeField] private PlayerGunFire _playerGunFire;
     [SerializeField] private PlayerBombFire _playerBombFire;
+    [SerializeField] private Image _bombChargeGauge;
 
     private const string AmmoText = "Ammo : {0} / {1}";
     private const string BombText = "Bomb : {0} / {1}";
@@ -39,5 +41,10 @@ public class UIManager : MonoBehaviour
     public void RefreshBomb()
     {
         _bombText.text = string.Format(BombText, _playerBombFire.RemainingBomb, _playerBombFire.MaxBomb);
+    }
+
+    public void RefreshBombGauge()
+    {
+        _bombChargeGauge.fillAmount = _playerBombFire.ChargeGauge / _playerBombFire.MaxChargeGauge;
     }
 }
