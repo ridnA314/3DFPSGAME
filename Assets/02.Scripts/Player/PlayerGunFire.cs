@@ -20,7 +20,7 @@ public class PlayerGunFire : MonoBehaviour
     private const float _fireInterval = 1f;
     private const float _reloadTime = 10f;
     private float _timer;
-    private Coroutine _reloadCoroutine;
+    private Awaitable _reloadAwaitable;
 
     private void Start()
     {
@@ -38,28 +38,30 @@ public class PlayerGunFire : MonoBehaviour
             _timer = 0f;
             _remainingAmmo--;
 
-            if (_reloadCoroutine != null)
+            if (_reloadAwaitable != null)
             {
                 GameLogger.Log("Cancel Reload");
-                StopCoroutine(_reloadCoroutine);
-                _reloadCoroutine = null;
+                _reloadAwaitable.Cancel();
+                _reloadAwaitable = null;
             }
         }
 
-        if (Input.GetButtonDown("Reload") && _reloadCoroutine == null)
+        if (Input.GetButtonDown("Reload") && _reloadAwaitable == null)
         {
-            _reloadCoroutine = StartCoroutine(Reloading_Coroutine());
+            _reloadAwaitable = Reloading_Async();
         }
     }
 
-    private IEnumerator Reloading_Coroutine()
+    private async Awaitable Reloading_Async()
     {
         GameLogger.Log("Start Reload");
-        yield return new WaitForSeconds(_reloadTime / _reloadSpeed);
 
+        float waitTime = _reloadTime / _reloadSpeed;
+        await Awaitable.WaitForSecondsAsync(waitTime);
         _remainingAmmo = _magazineSize;
+
         GameLogger.Log("Reload Complete");
-        _reloadCoroutine = null;
+        _reloadAwaitable = null;
     }
 
     private void Shoot()
