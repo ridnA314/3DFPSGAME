@@ -14,29 +14,17 @@ public class PlayerGunFire : MonoBehaviour
 
     private int _remainingAmmo;
     public int RemainingAmmo => _remainingAmmo;
-    private int _currentAmmo;
-    private bool _isReloading = false;
 
     private const float _fireInterval = 1f;
     private float _timer;
 
-    private const float _reloadTime = 10f;
-    private float _currentReloadTime = 10f;
-    private float _reloadTimer;
-
     private void Start()
     {
         _timer = 0f;
-        _reloadTimer = 0f;
-        _remainingAmmo = _magazineSize;
-        UIManager.Instance?.RefreshAmmo();
     }
 
     private void Update()
     {
-        TryReload();
-        Reloading();
-
         _timer += Time.deltaTime * _fireRate;
         //1. mouse left click
         if (Input.GetButton("Fire1") && _timer >= _fireInterval)
@@ -48,8 +36,6 @@ public class PlayerGunFire : MonoBehaviour
 
     private void Shoot()
     {
-        if (_isReloading && !CheckRemainingAmmo()) return;
-
         //2. create lay, set fire position and direction
         Transform cameraTransform = Camera.main.transform;
         Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
@@ -67,49 +53,5 @@ public class PlayerGunFire : MonoBehaviour
             effect.transform.forward = hitInfo.normal;
             effect.Play();
         }
-
-        UseAmmo();
-    }
-
-    private void Reloading()
-    {
-        if (!_isReloading) return;
-
-        _reloadTimer += Time.deltaTime * _reloadSpeed;
-        _remainingAmmo = _currentAmmo + (int)((_magazineSize - _currentAmmo) * (_reloadTimer / _currentReloadTime));
-
-        if (_remainingAmmo >= _magazineSize)
-        {
-            _remainingAmmo = _magazineSize;
-        }
-
-        if (_reloadTimer >= _currentReloadTime)
-        {
-            _isReloading = false;
-        }
-
-        UIManager.Instance?.RefreshAmmo();
-    }
-
-    private void TryReload()
-    {
-        if (Input.GetButtonDown("Reload") && !_isReloading)
-        {
-            _isReloading = true;
-            _currentAmmo = _remainingAmmo;
-            _reloadTimer = 0f;
-            _currentReloadTime = _reloadTime * (1 - ((float)_currentAmmo / _magazineSize));
-        }
-    }
-
-    private bool CheckRemainingAmmo()
-    {
-        return _remainingAmmo > 0;
-    }
-
-    private void UseAmmo()
-    {
-        --_remainingAmmo;
-        UIManager.Instance?.RefreshAmmo();
     }
 }
