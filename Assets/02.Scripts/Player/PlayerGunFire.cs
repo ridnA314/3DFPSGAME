@@ -3,35 +3,65 @@ using UnityEngine;
 //mouse left button -> fire at center
 public class PlayerGunFire : MonoBehaviour
 {
-    [Header("Stat")]
     [SerializeField] private ParticleSystem _hitEffectPrefab;
+
+    [Header("Stat")]
     [SerializeField] private float _fireRate = 10f;
     [SerializeField] private float _range = 100f;
     [SerializeField] private float _damage = 10f;
-    [SerializeField] private int _magazineSize = 50;
+    [SerializeField] private int _magazineSize = 30;
     public int MagazineSize => _magazineSize;
-    [SerializeField] private float _reloadSpeed = 2f;
+    [SerializeField] private float _reloadSpeed = 3f;
 
     private int _remainingAmmo;
     public int RemainingAmmo => _remainingAmmo;
 
     private const float _fireInterval = 1f;
+    private const float _reloadTime = 10f;
     private float _timer;
+
+    private bool _isReloading;
+    private float _reloadTimer;
 
     private void Start()
     {
+        _isReloading = false;
+        _reloadTimer = 0f;
         _timer = 0f;
+        _remainingAmmo = _magazineSize;
     }
 
     private void Update()
     {
         _timer += Time.deltaTime * _fireRate;
         //1. mouse left click
-        if (Input.GetButton("Fire1") && _timer >= _fireInterval)
+        if (Input.GetButton("Fire1") && _timer >= _fireInterval && _remainingAmmo > 0)
         {
             Shoot();
             _timer = 0f;
+            _remainingAmmo--;
         }
+
+        if (Input.GetButtonDown("Reload") && !_isReloading)
+        {
+            _isReloading = true;
+            _reloadTimer = 0f;
+        }
+
+        if (_isReloading)
+        {
+            _reloadTimer += Time.deltaTime * _reloadSpeed;
+            if (_reloadTimer >= _reloadTime)
+            {
+                _isReloading = false;
+                Reloading(); // reload complete
+            }
+        }
+    }
+
+    private void Reloading()
+    {
+        _remainingAmmo = _magazineSize;
     }
 
     private void Shoot()
