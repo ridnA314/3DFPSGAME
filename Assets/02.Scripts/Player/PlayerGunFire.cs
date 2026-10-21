@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 //mouse left button -> fire at center
@@ -20,13 +21,8 @@ public class PlayerGunFire : MonoBehaviour
     private const float _reloadTime = 10f;
     private float _timer;
 
-    private bool _isReloading;
-    private float _reloadTimer;
-
     private void Start()
     {
-        _isReloading = false;
-        _reloadTimer = 0f;
         _timer = 0f;
         _remainingAmmo = _magazineSize;
     }
@@ -42,26 +38,19 @@ public class PlayerGunFire : MonoBehaviour
             _remainingAmmo--;
         }
 
-        if (Input.GetButtonDown("Reload") && !_isReloading)
+        if (Input.GetButtonDown("Reload"))
         {
-            _isReloading = true;
-            _reloadTimer = 0f;
-        }
-
-        if (_isReloading)
-        {
-            _reloadTimer += Time.deltaTime * _reloadSpeed;
-            if (_reloadTimer >= _reloadTime)
-            {
-                _isReloading = false;
-                Reloading(); // reload complete
-            }
+            StartCoroutine(Reloading_Coroutine());
         }
     }
 
-    private void Reloading()
+    private IEnumerator Reloading_Coroutine()
     {
+        GameLogger.Log("Start Reload");
+        yield return new WaitForSeconds(_reloadTime / _reloadSpeed);
+
         _remainingAmmo = _magazineSize;
+        GameLogger.Log("Reload Complete");
     }
 
     private void Shoot()
