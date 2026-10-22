@@ -20,8 +20,13 @@ public class Zombie : MonoBehaviour
     [Header("Stat")]
     [SerializeField] private float _detectionRange = 8f; // distance that find player
     [SerializeField] private float _comebackRange = 20f; // comeback when too far from first position
+    [SerializeField] private float _attackRange = 1.5f;
+    [SerializeField] private float _attackSpeed = 8f;
     [SerializeField] private float _moveSpeedScalar = 5f;
 
+    private const float AttackInterval = 10f;
+
+    private float _attackTimer;
     private CharacterController _controller;
     private Vector3 _startPosition;
     private GameObject _player;
@@ -30,6 +35,8 @@ public class Zombie : MonoBehaviour
 
     private void Start()
     {
+        _attackTimer = 0f;
+
         _controller = GetComponent<CharacterController>();
         _startPosition = transform.position;
         _player = GameObject.FindGameObjectWithTag("Player");
@@ -87,6 +94,15 @@ public class Zombie : MonoBehaviour
             return;
         }
 
+        // Attack when distance self and player is less than attack range
+        if (Vector3.Distance(transform.position, _player.transform.position) <= _attackRange)
+        {
+            _attackTimer = 0f;
+            Debug.Log($"{_state} -> {ZombieState.Attack}");
+            _state = ZombieState.Attack;
+            return;
+        }
+
         Vector3 direction = _player.transform.position - transform.position;
         direction.y = 0f;
         direction.Normalize();
@@ -113,7 +129,24 @@ public class Zombie : MonoBehaviour
         _controller.SimpleMove(direction * _moveSpeedScalar);
     }
 
+    // Attack : attack per certain interval
     private void Attack()
     {
+        // ditance to player greater than attack range
+        float distanceThreshold = Vector3.Distance(transform.position, _player.transform.position);
+        if (distanceThreshold > _attackRange)
+        {
+            Debug.Log($"{_state} -> {ZombieState.Trace}");
+            _state = ZombieState.Trace;
+        }
+
+        _attackTimer += Time.deltaTime * _attackSpeed;
+        if (_attackTimer >= AttackInterval)
+        {
+            //ToDo. Play Attack animation
+            //ToDo. Implement attack process
+            _attackTimer = 0f;
+            Debug.Log("zombie attacks player!");
+        }
     }
 }
