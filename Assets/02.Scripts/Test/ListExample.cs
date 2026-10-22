@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class ListTest : MonoBehaviour
+public class ListExample : MonoBehaviour
 {
     //Data Structure
     // Struture for Manage(CRUDS) Data efficiently

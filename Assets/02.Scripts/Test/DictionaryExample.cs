@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DictionaryTest : MonoBehaviour
+public class DictionaryExample : MonoBehaviour
 {
     //Array or List is approaching by using index
     //But Dictionary is Saving Data with Pair of Key and Value
