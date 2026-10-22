@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class CoroutineTest : MonoBehaviour
+public class CoroutineExample : MonoBehaviour
 {
     // every second write log with 1 sec -> 2 sec -> 3 sec and then write "NARO Shoot!"
     //unity coroutine is function that provide execution and control with async
