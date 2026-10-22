@@ -14,6 +14,7 @@ public enum ZombieState
     Attack, // Attack : attack by certain interval
     Hit, // Hit : attacked and then stun just moment
     Death, // Dead : lay on ground, and do not act
+    Patrol, // Patrol : patrol certain distance
 }
 
 public class Zombie : MonoBehaviour
@@ -26,12 +27,15 @@ public class Zombie : MonoBehaviour
     [SerializeField] private float _stunTime = 0.3f;
     [SerializeField] private float _moveSpeedScalar = 5f;
     [SerializeField] private float _maxHealth = 30f;
+    [SerializeField] private Vector3 _patrolTargetPosition;
+    [SerializeField] private float _patrolWaitingTime = 3f;
 
     private const float AttackInterval = 10f;
 
     private float _health;
     public float Health => _health;
 
+    private float _patrolTimer;
     private float _attackTimer;
     private CharacterController _controller;
     private Vector3 _startPosition;
@@ -42,6 +46,7 @@ public class Zombie : MonoBehaviour
     private void Start()
     {
         _health = _maxHealth;
+        _patrolTimer = 0f;
         _attackTimer = 0f;
 
         _controller = GetComponent<CharacterController>();
@@ -68,6 +73,9 @@ public class Zombie : MonoBehaviour
                 break;
             case ZombieState.Attack:
                 Attack();
+                break;
+            case ZombieState.Patrol:
+                Patrol();
                 break;
         }
     }
@@ -115,6 +123,23 @@ public class Zombie : MonoBehaviour
     // just wait
     private void Idle()
     {
+        _patrolTimer += Time.deltaTime;
+        if (_patrolTimer >= _patrolWaitingTime &&
+            Vector3.Distance(transform.position, _patrolTargetPosition) <= 0.5f)
+        {
+            Debug.Log($"{_state} -> {ZombieState.Comeback}");
+            _state = ZombieState.Comeback;
+            return;
+        }
+
+        if (_patrolTimer >= _patrolWaitingTime)
+        {
+            Debug.Log($"{_state} -> {ZombieState.Patrol}");
+            _patrolTimer = 0f;
+            _state = ZombieState.Patrol;
+            return;
+        }
+
         //ToDo. Play Idle animation
         //when close to player, trans to Trace State
         float distanceThreshold = Vector3.Distance(transform.position, _player.transform.position);
@@ -123,6 +148,23 @@ public class Zombie : MonoBehaviour
             Debug.Log($"{_state} -> {ZombieState.Trace}");
             _state = ZombieState.Trace;
         }
+    }
+
+    private void Patrol()
+    {
+        if (Vector3.Distance(transform.position, _patrolTargetPosition) < 0.5f)
+        {
+            ChangeToIdle();
+            return;
+        }
+
+        //ToDo. Play Walk animation
+        Vector3 direction = _patrolTargetPosition - transform.position;
+        direction.y = 0f;
+        direction.Normalize();
+
+        transform.forward = direction;
+        _controller.SimpleMove(direction * _moveSpeedScalar);
     }
 
     private void Trace()
@@ -159,8 +201,7 @@ public class Zombie : MonoBehaviour
         // When achieve at first position, trans to Idle State
         if (Vector3.Distance(transform.position, _startPosition) <= 0.5f)
         {
-            Debug.Log($"{_state} -> {ZombieState.Idle}");
-            _state = ZombieState.Idle;
+            ChangeToIdle();
             return;
         }
 
@@ -191,5 +232,12 @@ public class Zombie : MonoBehaviour
             _attackTimer = 0f;
             Debug.Log("zombie attacks player!");
         }
+    }
+
+    private void ChangeToIdle()
+    {
+        Debug.Log($"{_state} -> {ZombieState.Idle}");
+        _patrolTimer = 0f;
+        _state = ZombieState.Idle;
     }
 }
