@@ -6,7 +6,7 @@ public class ListTest : MonoBehaviour
     //Data Structure
     // Struture for Manage(CRUDS) Data efficiently
     // C - Create
-    // R - Remove
+    // R - Read
     // U - Update
     // D - Delete
     // S - Search
