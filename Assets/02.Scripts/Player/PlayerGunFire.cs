@@ -26,6 +26,7 @@ public class PlayerGunFire : MonoBehaviour
     {
         _timer = 0f;
         _remainingAmmo = _magazineSize;
+        UIManager.Instance?.RefreshAmmo();
     }
 
     private void Update()
@@ -58,6 +59,7 @@ public class PlayerGunFire : MonoBehaviour
         yield return new WaitForSeconds(_reloadTime / _reloadSpeed);
 
         _remainingAmmo = _magazineSize;
+        UIManager.Instance?.RefreshAmmo();
         GameLogger.Log("Reload Complete");
         _reloadCoroutine = null;
     }
@@ -76,10 +78,17 @@ public class PlayerGunFire : MonoBehaviour
         if (isHit)
         {
             //GameLogger.Log($"Hit {hitInfo.collider.name} by bullet, damage: {_damage}");
+            //play effect
             ParticleSystem effect = Instantiate(_hitEffectPrefab);
             effect.transform.position = hitInfo.point; // hit position
             effect.transform.forward = hitInfo.normal;
             effect.Play();
+
+            //If target is Zombie, call TakeDamage of Zombie
+            if (hitInfo.collider.TryGetComponent(out Zombie zombie))
+            {
+                zombie.TakeDamage(_damage);
+            }
         }
     }
 }

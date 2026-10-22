@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 //Finite State Machine(FSM) : there exist finite state, and act different action by each state
@@ -11,7 +12,7 @@ public enum ZombieState
     Trace, // chase : chase to plyer
     Comeback, // Return : return to initial position
     Attack, // Attack : attack by certain interval
-    Hit, // Hit : attacked and than stun just moment
+    Hit, // Hit : attacked and then stun just moment
     Death, // Dead : lay on ground, and do not act
 }
 
@@ -22,9 +23,14 @@ public class Zombie : MonoBehaviour
     [SerializeField] private float _comebackRange = 20f; // comeback when too far from first position
     [SerializeField] private float _attackRange = 1.5f;
     [SerializeField] private float _attackSpeed = 8f;
+    [SerializeField] private float _stunTime = 0.3f;
     [SerializeField] private float _moveSpeedScalar = 5f;
+    [SerializeField] private float _maxHealth = 30f;
 
     private const float AttackInterval = 10f;
+
+    private float _health;
+    public float Health => _health;
 
     private float _attackTimer;
     private CharacterController _controller;
@@ -35,6 +41,7 @@ public class Zombie : MonoBehaviour
 
     private void Start()
     {
+        _health = _maxHealth;
         _attackTimer = 0f;
 
         _controller = GetComponent<CharacterController>();
@@ -62,11 +69,47 @@ public class Zombie : MonoBehaviour
             case ZombieState.Attack:
                 Attack();
                 break;
-            case ZombieState.Hit:
-                break;
-            case ZombieState.Death:
-                break;
         }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        if (damage < 0f) return;
+        if (_state == ZombieState.Death) return;
+
+        _health -= damage;
+
+        StopAllCoroutines();
+
+        if (_health > 0f)
+        {
+            // stun a moment
+            Debug.Log($"{_state} -> {ZombieState.Hit}");
+            _state = ZombieState.Hit;
+            StartCoroutine(Hit_Coroutine());
+        }
+        else
+        {
+            Debug.Log($"{_state} -> {ZombieState.Death}");
+            _state = ZombieState.Death;
+            StartCoroutine(Death_Coroutine());
+        }
+    }
+
+    private IEnumerator Hit_Coroutine()
+    {
+        yield return new WaitForSeconds(_stunTime);
+
+        // Trace because attacked
+        Debug.Log($"{_state} -> {ZombieState.Trace}");
+        _state = ZombieState.Trace;
+    }
+
+    private IEnumerator Death_Coroutine()
+    {
+        _controller.enabled = false;
+        yield return new WaitForSeconds(0.5f);
+        Destroy(gameObject);
     }
 
     // just wait
