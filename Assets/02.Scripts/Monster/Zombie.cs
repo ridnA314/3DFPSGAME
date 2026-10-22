@@ -19,9 +19,11 @@ public class Zombie : MonoBehaviour
 {
     [Header("Stat")]
     [SerializeField] private float _detectionRange = 8f; // distance that find player
+    [SerializeField] private float _comebackRange = 20f; // comeback when too far from first position
     [SerializeField] private float _moveSpeedScalar = 5f;
 
     private CharacterController _controller;
+    private Vector3 _startPosition;
     private GameObject _player;
 
     private ZombieState _state;
@@ -29,6 +31,7 @@ public class Zombie : MonoBehaviour
     private void Start()
     {
         _controller = GetComponent<CharacterController>();
+        _startPosition = transform.position;
         _player = GameObject.FindGameObjectWithTag("Player");
 
         _state = ZombieState.Idle;
@@ -75,6 +78,15 @@ public class Zombie : MonoBehaviour
     private void Trace()
     {
         //ToDo. Play Run animation
+
+        // too fat from first position
+        if (Vector3.Distance(transform.position, _startPosition) > _comebackRange)
+        {
+            Debug.Log($"{_state} -> {ZombieState.Comeback}");
+            _state = ZombieState.Comeback;
+            return;
+        }
+
         Vector3 direction = _player.transform.position - transform.position;
         direction.y = 0f;
         direction.Normalize();
@@ -85,6 +97,20 @@ public class Zombie : MonoBehaviour
 
     private void Comeback()
     {
+        // When achieve at first position, trans to Idle State
+        if (Vector3.Distance(transform.position, _startPosition) <= 0.5f)
+        {
+            Debug.Log($"{_state} -> {ZombieState.Idle}");
+            _state = ZombieState.Idle;
+            return;
+        }
+
+        Vector3 direction = _startPosition - transform.position;
+        direction.y = 0f;
+        direction.Normalize();
+
+        transform.forward = direction;
+        _controller.SimpleMove(direction * _moveSpeedScalar);
     }
 
     private void Attack()
