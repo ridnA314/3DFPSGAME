@@ -35,6 +35,7 @@ public class Zombie : MonoBehaviour, IDamageable
 
     private const float AttackInterval = 10f;
 
+    public float MaxHealth => _maxHealth;
     private float _health;
     public float Health => _health;
 
