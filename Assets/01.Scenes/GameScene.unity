@@ -639,10 +639,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<color=#f00000>\uC900\uBE44!</color>"
+  m_text: "<color=#f0f000>\uC900\uBE44</color>"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f3e42f9837f0ae4d86f3537730728fe, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f3e42f9837f0ae4d86f3537730728fe, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d694c43d333af2446a7508cf9e9f612e, type: 2}
+  m_sharedMaterial: {fileID: 8334791141715352322, guid: d694c43d333af2446a7508cf9e9f612e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -672,7 +672,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1547,6 +1547,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   _ammoText: {fileID: 36111880}
   _bombText: {fileID: 1606372862}
+  _gameStateText: {fileID: 191787480}
   _playerGunFire: {fileID: 1424342459}
   _playerBombFire: {fileID: 1424342460}
   _playerStat: {fileID: 1424342461}
