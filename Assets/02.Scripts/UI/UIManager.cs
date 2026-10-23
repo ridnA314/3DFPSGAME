@@ -14,7 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private PlayerBombFire _playerBombFire;
     [SerializeField] private PlayerStat _playerStat;
 
-    [SerializeField] private Image _bombChargeGauge;
+    [SerializeField] private Slider _bombChargeGauge;
     [SerializeField] private Slider _playerHealthBar;
     [SerializeField] private Slider _playerStaminaBar;
 
@@ -52,7 +52,7 @@ public class UIManager : MonoBehaviour
 
     public void RefreshBombGauge()
     {
-        _bombChargeGauge.fillAmount = _playerBombFire.ChargeGauge / _playerBombFire.MaxChargeGauge;
+        _bombChargeGauge.value = _playerBombFire.ChargeGauge / _playerBombFire.MaxChargeGauge;
     }
 
     public void RefreshPlayerHealthBar()
