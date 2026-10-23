@@ -22,6 +22,7 @@ public class Zombie : MonoBehaviour, IDamageable
     [Header("Stat")]
     [SerializeField] private float _detectionRange = 8f; // distance that find player
     [SerializeField] private float _comebackRange = 20f; // comeback when too far from first position
+    [SerializeField] private float _attackDamage = 10f;
     [SerializeField] private float _attackRange = 1.5f;
     [SerializeField] private float _attackSpeed = 8f;
     [SerializeField] private float _stunTime = 0.3f;
@@ -236,9 +237,15 @@ public class Zombie : MonoBehaviour, IDamageable
         if (_attackTimer >= AttackInterval)
         {
             //ToDo. Play Attack animation
-            //ToDo. Implement attack process
+            DamageInfo info = new DamageInfo()
+            {
+                Value = _attackDamage,
+                HitPoint = _player.transform.position,
+                HitNormal = (transform.position - _player.transform.position).normalized,
+            };
+
+            _player.GetComponent<Player>()?.TakeDamage(info);
             _attackTimer = 0f;
-            Debug.Log("zombie attacks player!");
         }
     }
 
