@@ -42,7 +42,7 @@ public class PlayerStat : MonoBehaviour
         UIManager.Instance?.RefreshPlayerStaminaBar();
     }
 
-    public void TakeDamage(float damage)
+    public void ApplyDamage(float damage)
     {
         if (damage < 0) return;
         if (_currentStamina <= 0) return;
