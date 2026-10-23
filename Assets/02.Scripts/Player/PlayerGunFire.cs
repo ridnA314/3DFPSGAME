@@ -38,6 +38,7 @@ public class PlayerGunFire : MonoBehaviour
             Shoot();
             _timer = 0f;
             _remainingAmmo--;
+            UIManager.Instance?.RefreshAmmo();
 
             if (_reloadCoroutine != null)
             {
