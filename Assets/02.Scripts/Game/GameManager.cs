@@ -43,7 +43,12 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator StartSequence_Coroutine()
     {
+        UIManager.Instance?.SetActiveStateText(true);
+        UIManager.Instance?.SetReadyText();
         yield return new WaitForSeconds(_startTime);
+        UIManager.Instance?.SetStartText();
         _state = GameState.Playing;
+        yield return new WaitForSeconds(1f);
+        UIManager.Instance?.SetActiveStateText(false);
     }
 }
