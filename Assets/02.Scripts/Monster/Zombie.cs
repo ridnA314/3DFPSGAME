@@ -30,6 +30,9 @@ public class Zombie : MonoBehaviour, IDamageable
     [SerializeField] private Vector3 _patrolTargetPosition;
     [SerializeField] private float _patrolWaitingTime = 3f;
 
+    [Header("Effect")]
+    [SerializeField] private GameObject _bloodSprayPrefab;
+
     private const float AttackInterval = 10f;
 
     private float _health;
@@ -80,17 +83,21 @@ public class Zombie : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(DamageInfo damageInfo)
     {
-        if (damage < 0f) return;
+        if (damageInfo.Value < 0f) return;
         if (_state == ZombieState.Death) return;
 
-        _health -= damage;
+        _health -= damageInfo.Value;
 
         StopAllCoroutines();
 
         if (_health > 0f)
         {
+            GameObject bloodSpray = Instantiate(_bloodSprayPrefab);
+            bloodSpray.transform.position = damageInfo.HitPoint;
+            bloodSpray.transform.forward = damageInfo.HitNormal;
+
             // stun a moment
             Debug.Log($"{_state} -> {ZombieState.Hit}");
             _state = ZombieState.Hit;
