@@ -94,7 +94,7 @@ public class Zombie : MonoBehaviour, IDamageable
 
         if (_health > 0f)
         {
-            GameObject bloodSpray = Instantiate(_bloodSprayPrefab);
+            GameObject bloodSpray = Instantiate(_bloodSprayPrefab, transform);
             bloodSpray.transform.position = damageInfo.HitPoint;
             bloodSpray.transform.forward = damageInfo.HitNormal;
 
