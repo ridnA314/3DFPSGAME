@@ -31,6 +31,8 @@ public class PlayerGunFire : MonoBehaviour
 
     private void Update()
     {
+        if (!GameManager.Instance.IsPlaying()) return;
+
         _timer += Time.deltaTime * _fireRate;
         //1. mouse left click
         if (Input.GetButton("Fire1") && _timer >= _fireInterval && _remainingAmmo > 0)

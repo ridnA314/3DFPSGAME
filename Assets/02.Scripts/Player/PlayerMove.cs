@@ -32,6 +32,8 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
+        if (!GameManager.Instance.IsPlaying()) return;
+
         //0. recovery stamina
         float healAmount = Mathf.Min(_playerStat.MaxHealth,
                                _playerStat.Stamina + Time.deltaTime * _playerStat.StaminaRecoveryPerSecond) -

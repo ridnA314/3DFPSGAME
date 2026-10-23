@@ -8,6 +8,8 @@ public class CameraRotate : MonoBehaviour
 
     private void Update()
     {
+        if (!GameManager.Instance.IsPlaying()) return;
+
         Rotate();
     }
 
