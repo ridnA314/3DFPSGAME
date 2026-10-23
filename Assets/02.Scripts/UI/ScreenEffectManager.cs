@@ -25,25 +25,27 @@ public class ScreenEffectManager : MonoBehaviour
 
     private void Start()
     {
-        Color color = _hitFlash.color;
-        color.a = 0;
-        _hitFlash.color = color;
+        SetAlpha(0);
     }
 
     public void ShowFlash()
     {
-        Color color = _hitFlash.color;
-        color.a = _flashAlpha;
-        _hitFlash.color = color;
+        SetAlpha(_flashAlpha);
 
         //StartCoroutine(Flash_Coroutine());
         StartCoroutine(FlashFadeOut_Coroutine());
     }
 
+    private void SetAlpha(float flashAlpha)
+    {
+        Color color = _hitFlash.color;
+        color.a = flashAlpha;
+        _hitFlash.color = color;
+    }
+
     public IEnumerator FlashFadeOut_Coroutine()
     {
         // 1. show that alpha value is 0.4
-        Color color = _hitFlash.color;
         float timer = 0f;
         float alpha;
 
@@ -52,17 +54,9 @@ public class ScreenEffectManager : MonoBehaviour
         {
             timer += Time.deltaTime;
             alpha = Mathf.Lerp(_flashAlpha, 0f, timer / _hitEffectDuration);
-            color.a = alpha;
-            _hitFlash.color = color;
+            SetAlpha(alpha);
 
-            yield return null;
+            yield return null; // rest just one frame
         }
-    }
-
-    private IEnumerator Flash_Coroutine()
-    {
-        _hitFlash.enabled = true;
-        yield return new WaitForSeconds(_hitEffectDuration);
-        _hitFlash.enabled = false;
     }
 }
