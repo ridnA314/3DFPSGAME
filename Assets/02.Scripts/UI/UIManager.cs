@@ -9,9 +9,14 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI _ammoText;
     [SerializeField] private TextMeshProUGUI _bombText;
+
     [SerializeField] private PlayerGunFire _playerGunFire;
     [SerializeField] private PlayerBombFire _playerBombFire;
+    [SerializeField] private PlayerStat _playerStat;
+
     [SerializeField] private Image _bombChargeGauge;
+    [SerializeField] private Slider _playerHealthBar;
+    [SerializeField] private Slider _playerStaminaBar;
 
     private const string AmmoText = "Ammo : {0} / {1}";
     private const string BombText = "Bomb : {0} / {1}";
@@ -31,6 +36,8 @@ public class UIManager : MonoBehaviour
     {
         RefreshAmmo();
         RefreshBomb();
+        RefreshPlayerHealthBar();
+        RefreshPlayerStaminaBar();
     }
 
     public void RefreshAmmo()
@@ -46,5 +53,15 @@ public class UIManager : MonoBehaviour
     public void RefreshBombGauge()
     {
         _bombChargeGauge.fillAmount = _playerBombFire.ChargeGauge / _playerBombFire.MaxChargeGauge;
+    }
+
+    public void RefreshPlayerHealthBar()
+    {
+        _playerHealthBar.value = _playerStat.Health / _playerStat.MaxHealth;
+    }
+
+    public void RefreshPlayerStaminaBar()
+    {
+        _playerStaminaBar.value = _playerStat.Stamina / _playerStat.MaxStamina;
     }
 }

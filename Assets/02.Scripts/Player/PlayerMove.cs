@@ -6,14 +6,12 @@ public class PlayerMove : MonoBehaviour
     private const float Gravity = -20f;
     private float _yVelocity = 0f; // vertical speed scalar, add per frame
     private int _jumpCount = 0; // count of jump
-    private float _stamina = 0f;
 
-    [SerializeField] private float _maxStamina = 100f;
+    [SerializeField] private PlayerStat _playerStat;
     [SerializeField] private float _moveSpeedScalar = 7f;
     [SerializeField] private float _sprintSpeedScalar = 12f;
     [SerializeField] private float _jumpPower = 10f;
     [SerializeField] private int _maxJumpCount = 2;
-    [SerializeField] private float _staminaRecoveryPerSecond = 15f;
     [SerializeField] private float _sprintStaminaCost = 10f;
     [SerializeField] private float _jumpStaminaCost = 20f;
 
@@ -26,13 +24,19 @@ public class PlayerMove : MonoBehaviour
             _characterController = GetComponent<CharacterController>();
         }
 
-        _stamina = _maxStamina;
+        if (_playerStat == null)
+        {
+            _playerStat = GetComponent<PlayerStat>();
+        }
     }
 
     private void Update()
     {
         //0. recovery stamina
-        _stamina = Mathf.Min(_maxStamina, _stamina + Time.deltaTime * _staminaRecoveryPerSecond);
+        float healAmount = Mathf.Min(_playerStat.MaxHealth,
+                               _playerStat.Stamina + Time.deltaTime * _playerStat.StaminaRecoveryPerSecond) -
+                           _playerStat.Stamina;
+        _playerStat.HealStamina(healAmount);
 
         //1. input keyboard
         float h = Input.GetAxisRaw("Horizontal");
@@ -59,11 +63,11 @@ public class PlayerMove : MonoBehaviour
         //4. If press jump key, Try Jump
         bool jumpCondition = (_jumpCount >= 1 && _jumpCount < _maxJumpCount) ||
                              (_jumpCount < 1 && _characterController.isGrounded);
-        if (Input.GetButtonDown("Jump") && jumpCondition && _stamina >= _jumpStaminaCost)
+        if (Input.GetButtonDown("Jump") && jumpCondition && _playerStat.Stamina >= _jumpStaminaCost)
         {
             _yVelocity = _jumpPower;
             _jumpCount++;
-            _stamina -= _jumpStaminaCost;
+            _playerStat.UseStamina(_jumpStaminaCost);
         }
 
         //5. calculate velocity
@@ -72,10 +76,10 @@ public class PlayerMove : MonoBehaviour
         if (wantSprint)
         {
             float needStaminaCost = _sprintStaminaCost * Time.deltaTime;
-            if (_stamina >= needStaminaCost)
+            if (_playerStat.Stamina >= needStaminaCost)
             {
                 currentSpeed = _sprintSpeedScalar;
-                _stamina -= needStaminaCost;
+                _playerStat.UseStamina(needStaminaCost);
             }
         }
 
