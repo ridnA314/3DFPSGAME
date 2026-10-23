@@ -16,6 +16,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (_playerStat.Health <= 0) return;
 
+        ScreenEffectManager.Instance?.ShowFlash();
         _playerStat.ApplyDamage(damageInfo.Value);
         Debug.Log($"Player Hit!! {damageInfo.Value}");
 
