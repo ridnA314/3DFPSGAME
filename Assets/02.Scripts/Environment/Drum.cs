@@ -3,7 +3,7 @@ using UnityEngine;
 
 // explosion when health become zero
 [RequireComponent(typeof(Rigidbody))]
-public class Drum : MonoBehaviour
+public class Drum : MonoBehaviour, IDamageable
 {
     [SerializeField] private ParticleSystem _explosionEffectPrefab;
     [SerializeField] private LayerMask _targetLayer;
@@ -24,7 +24,7 @@ public class Drum : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    public void Damage(float damage)
+    public void TakeDamage(float damage)
     {
         if (damage <= 0) return;
         if (_health <= 0) return;
@@ -69,7 +69,7 @@ public class Drum : MonoBehaviour
         // 1. Give Damage them
         foreach (Collider col in colliders)
         {
-            col.GetComponent<Drum>()?.Damage(_explosionDamage);
+            col.GetComponent<Drum>()?.TakeDamage(_explosionDamage);
             col.GetComponent<Zombie>()?.TakeDamage(_explosionDamage);
         }
     }

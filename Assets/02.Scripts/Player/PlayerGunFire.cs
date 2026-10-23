@@ -85,15 +85,9 @@ public class PlayerGunFire : MonoBehaviour
             effect.Play();
 
             //If target is Zombie, call TakeDamage of Zombie
-            if (hitInfo.collider.TryGetComponent(out Zombie zombie))
-            {
-                zombie.TakeDamage(_damage);
-            }
-
-            if (hitInfo.collider.TryGetComponent(out Drum drum))
-            {
-                drum.Damage(_damage);
-            }
+            hitInfo.collider.GetComponent<Zombie>()?.TakeDamage(_damage);
+            hitInfo.collider.GetComponent<Drum>()?.TakeDamage(_damage);
+            hitInfo.collider.GetComponent<Box>()?.TakeDamage(_damage);
         }
     }
 }

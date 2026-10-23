@@ -17,7 +17,7 @@ public enum ZombieState
     Patrol, // Patrol : patrol certain distance
 }
 
-public class Zombie : MonoBehaviour
+public class Zombie : MonoBehaviour, IDamageable
 {
     [Header("Stat")]
     [SerializeField] private float _detectionRange = 8f; // distance that find player
