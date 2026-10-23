@@ -23,7 +23,7 @@ public class Player : MonoBehaviour, IDamageable
         if (_playerStat.Health <= 0)
         {
             Debug.Log("Player Defeated!");
-            //ToDo. Game Over
+            GameManager.Instance?.GameOver();
         }
     }
 }
