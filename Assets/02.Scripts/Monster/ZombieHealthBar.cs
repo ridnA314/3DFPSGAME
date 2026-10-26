@@ -15,6 +15,7 @@ public class ZombieHealthBar : MonoBehaviour
     private void Start()
     {
         _zombie.OnDamaged += RefreshHealthBar;
+        RefreshHealthBar();
     }
 
     private void LateUpdate()

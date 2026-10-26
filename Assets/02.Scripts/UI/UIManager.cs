@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _ammoText;
     [SerializeField] private TextMeshProUGUI _bombText;
     [SerializeField] private TextMeshProUGUI _gameStateText;
+    [SerializeField] private TextMeshProUGUI _remainingEnemyText;
 
     [SerializeField] private PlayerGunFire _playerGunFire;
     [SerializeField] private PlayerBombFire _playerBombFire;
@@ -25,6 +26,8 @@ public class UIManager : MonoBehaviour
     private const string ReadyText = "<color=#f0f000>준비</color>";
     private const string StartText = "<color=#00f0f0>시작!</color>";
     private const string GameOverText = "<color=#f00000>게임 오버</color>";
+
+    private const string RemainingEnemyText = "Enemy Count : {0}";
 
     private void Awake()
     {
@@ -88,5 +91,10 @@ public class UIManager : MonoBehaviour
     public void SetGameOverText()
     {
         _gameStateText.text = GameOverText;
+    }
+
+    public void RefreshEnemyCount(int count)
+    {
+        _remainingEnemyText.text = string.Format(RemainingEnemyText, count);
     }
 }

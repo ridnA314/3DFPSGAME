@@ -21,6 +21,7 @@ public class Zombie : MonoBehaviour, IDamageable
 {
     [Header("Stat")]
     [SerializeField] private float _detectionRange = 8f; // distance that find player
+
     [SerializeField] private float _comebackRange = 20f; // comeback when too far from first position
     [SerializeField] private float _attackDamage = 10f;
     [SerializeField] private float _attackRange = 1.5f;
@@ -50,9 +51,13 @@ public class Zombie : MonoBehaviour, IDamageable
 
     public event Action OnDamaged;
 
-    private void Start()
+    private void Awake()
     {
         _health = _maxHealth;
+    }
+
+    private void Start()
+    {
         _patrolTimer = 0f;
         _attackTimer = 0f;
 
@@ -61,6 +66,8 @@ public class Zombie : MonoBehaviour, IDamageable
         _player = GameObject.FindGameObjectWithTag("Player");
 
         _state = ZombieState.Idle;
+
+        GameManager.Instance?.IncreaseEnemy();
     }
 
     private void Update()
@@ -112,6 +119,7 @@ public class Zombie : MonoBehaviour, IDamageable
         }
         else
         {
+            GameManager.Instance?.DecreaseEnemy();
             Debug.Log($"{_state} -> {ZombieState.Death}");
             _state = ZombieState.Death;
             StartCoroutine(Death_Coroutine());

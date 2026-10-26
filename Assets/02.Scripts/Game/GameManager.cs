@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
     private GameState _state;
     public GameState State => _state;
 
+    private int _enemyCount;
+    public int EnemyCount => _enemyCount;
+
     private void Awake()
     {
         if (_instance != null)
@@ -27,6 +30,8 @@ public class GameManager : MonoBehaviour
         }
 
         _instance = this;
+        _enemyCount = 0;
+
         DontDestroyOnLoad(gameObject);
     }
 
@@ -61,5 +66,17 @@ public class GameManager : MonoBehaviour
         _state = GameState.GameOver;
         UIManager.Instance?.SetActiveStateText(true);
         UIManager.Instance?.SetGameOverText();
+    }
+
+    public void IncreaseEnemy()
+    {
+        _enemyCount += 1;
+        UIManager.Instance?.RefreshEnemyCount(_enemyCount);
+    }
+
+    public void DecreaseEnemy()
+    {
+        _enemyCount -= 1;
+        UIManager.Instance?.RefreshEnemyCount(_enemyCount);
     }
 }
