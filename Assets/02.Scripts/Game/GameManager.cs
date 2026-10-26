@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public GameState State => _state;
 
     private int _currentStageId;
+    public int CurrentStageId => _currentStageId;
 
     private int _enemyCount;
     public int EnemyCount => _enemyCount;
@@ -40,7 +41,10 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _state = GameState.Ready;
+        _currentStageId = 1;
+
         StartCoroutine(StartSequence_Coroutine());
+        ZombieSpawner.Instance?.StartSpawn();
     }
 
     public bool IsPlaying()
