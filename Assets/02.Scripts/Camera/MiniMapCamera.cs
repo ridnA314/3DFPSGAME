@@ -36,7 +36,6 @@ public class MiniMapCamera : MonoBehaviour
         transform.eulerAngles = new Vector3(90, _target.eulerAngles.y, 0);
     }
 
-    //ToDo. Separating zoom-in and zoom-out method
     public void ZoomIn()
     {
         _camera.orthographicSize -= 1;
