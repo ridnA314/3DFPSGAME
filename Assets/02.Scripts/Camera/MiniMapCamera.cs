@@ -5,6 +5,35 @@ public class MiniMapCamera : MonoBehaviour
 {
     [SerializeField] private Transform _target;
     [SerializeField] private float _height;
+    [SerializeField] private float _minSize;
+    [SerializeField] private float _maxSize;
+
+    private Camera _camera;
+
+    private void Awake()
+    {
+        _camera = GetComponent<Camera>();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            _camera.orthographicSize -= 1;
+            if (_camera.orthographicSize < _minSize)
+            {
+                _camera.orthographicSize = _minSize;
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            _camera.orthographicSize += 1;
+            if (_camera.orthographicSize > _maxSize)
+            {
+                _camera.orthographicSize = _maxSize;
+            }
+        }
+    }
 
     private void LateUpdate()
     {
