@@ -19,6 +19,9 @@ public enum ZombieState
 
 public class Zombie : MonoBehaviour, IDamageable
 {
+    [SerializeField] private ZombieType _type;
+    public ZombieType Type => _type;
+
     [Header("Stat")]
     [SerializeField] private float _detectionRange = 8f; // distance that find player
 
