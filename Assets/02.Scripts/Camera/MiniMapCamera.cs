@@ -19,19 +19,11 @@ public class MiniMapCamera : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            _camera.orthographicSize -= 1;
-            if (_camera.orthographicSize < _minSize)
-            {
-                _camera.orthographicSize = _minSize;
-            }
+            ZoomIn();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            _camera.orthographicSize += 1;
-            if (_camera.orthographicSize > _maxSize)
-            {
-                _camera.orthographicSize = _maxSize;
-            }
+            ZoomOut();
         }
     }
 
@@ -42,5 +34,24 @@ public class MiniMapCamera : MonoBehaviour
 
         // 2. rotation to target face direction
         transform.eulerAngles = new Vector3(90, _target.eulerAngles.y, 0);
+    }
+
+    //ToDo. Separating zoom-in and zoom-out method
+    public void ZoomIn()
+    {
+        _camera.orthographicSize -= 1;
+        if (_camera.orthographicSize < _minSize)
+        {
+            _camera.orthographicSize = _minSize;
+        }
+    }
+
+    public void ZoomOut()
+    {
+        _camera.orthographicSize += 1;
+        if (_camera.orthographicSize > _maxSize)
+        {
+            _camera.orthographicSize = _maxSize;
+        }
     }
 }
