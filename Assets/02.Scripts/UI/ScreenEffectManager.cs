@@ -26,6 +26,11 @@ public class ScreenEffectManager : MonoBehaviour
     private void Start()
     {
         SetAlpha(0);
+        Player player = GameObject.FindAnyObjectByType<Player>();
+        if (player != null)
+        {
+            player.PlayEffect += ShowFlash;
+        }
     }
 
     public void ShowFlash()

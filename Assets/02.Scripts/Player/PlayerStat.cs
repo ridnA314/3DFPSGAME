@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerStat : MonoBehaviour
@@ -5,6 +6,8 @@ public class PlayerStat : MonoBehaviour
     [SerializeField] private float _maxHealth;
     [SerializeField] private float _maxStamina;
     [SerializeField] private float _staminaRecoveryPerSecond = 15f;
+
+    private Player _player;
 
     public float MaxHealth => _maxHealth;
     public float MaxStamina => _maxStamina;
@@ -19,47 +22,46 @@ public class PlayerStat : MonoBehaviour
     {
         _currentHealth = _maxHealth;
         _currentStamina = _maxStamina;
+
+        _player = GetComponent<Player>();
+    }
+
+    private void Start()
+    {
+        _player.OnDamaged += ApplyDamage;
     }
 
     public void UseStamina(float amount)
     {
         if (amount < 0) return;
         if (_currentStamina <= 0) return;
-        _currentStamina -= amount;
+
+        _currentStamina = Mathf.Clamp(_currentStamina - amount, 0, _maxStamina);
         UIManager.Instance?.RefreshPlayerStaminaBar();
     }
 
     public void HealStamina(float amount)
     {
         if (amount < 0) return;
-        _currentStamina += amount;
 
-        if (_currentStamina > _maxStamina)
-        {
-            _currentStamina = _maxStamina;
-        }
-
+        _currentStamina = Mathf.Clamp(_currentStamina + amount, 0, _maxStamina);
         UIManager.Instance?.RefreshPlayerStaminaBar();
     }
 
-    public void ApplyDamage(float damage)
+    private void ApplyDamage(float damage)
     {
         if (damage < 0) return;
-        if (_currentStamina <= 0) return;
-        _currentHealth -= damage;
+        if (_currentHealth <= 0) return;
+
+        _currentHealth = Mathf.Clamp(_currentHealth + damage, 0, _maxHealth);
         UIManager.Instance?.RefreshPlayerHealthBar();
     }
 
     public void HealHealth(float amount)
     {
         if (amount < 0) return;
-        _currentHealth += amount;
 
-        if (_currentHealth > _maxHealth)
-        {
-            _currentHealth = _maxHealth;
-        }
-
+        _currentHealth = Mathf.Clamp(_currentHealth + amount, 0, _maxHealth);
         UIManager.Instance?.RefreshPlayerHealthBar();
     }
 }
