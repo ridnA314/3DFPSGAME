@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     private GameState _state;
     public GameState State => _state;
 
+    private int _currentStageId;
+
     private int _enemyCount;
     public int EnemyCount => _enemyCount;
 
