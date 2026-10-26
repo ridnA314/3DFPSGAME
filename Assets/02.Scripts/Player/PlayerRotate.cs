@@ -12,6 +12,7 @@ public class PlayerRotate : MonoBehaviour
 
     private void Rotate()
     {
+        if (Cursor.visible) return;
         if (!GameManager.Instance.IsPlaying()) return;
         if (!Input.GetMouseButton(2)) return;
 

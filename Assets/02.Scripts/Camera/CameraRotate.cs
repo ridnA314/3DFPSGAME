@@ -15,6 +15,7 @@ public class CameraRotate : MonoBehaviour
 
     private void Rotate()
     {
+        if (Cursor.visible) return;
         if (!Input.GetMouseButton(2)) return;
 
         //1. Input mouse
