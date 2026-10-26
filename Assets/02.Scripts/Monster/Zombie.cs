@@ -48,6 +48,8 @@ public class Zombie : MonoBehaviour, IDamageable
 
     private ZombieState _state;
 
+    public event Action OnDamaged;
+
     private void Start()
     {
         _health = _maxHealth;
@@ -93,6 +95,7 @@ public class Zombie : MonoBehaviour, IDamageable
         if (_state == ZombieState.Death) return;
 
         _health -= damageInfo.Value;
+        OnDamaged?.Invoke();
 
         StopAllCoroutines();
 

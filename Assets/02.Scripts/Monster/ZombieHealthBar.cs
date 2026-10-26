@@ -12,12 +12,19 @@ public class ZombieHealthBar : MonoBehaviour
         _zombie = GetComponent<Zombie>();
     }
 
+    private void Start()
+    {
+        _zombie.OnDamaged += RefreshHealthBar;
+    }
+
     private void LateUpdate()
     {
-        // 0 ~ 100% -> 0 ~ 1
-        _slider.value = _zombie.Health / _zombie.MaxHealth;
-
         //billboard : let health bar forward to camera
         _slider.transform.forward = Camera.main.transform.forward;
+    }
+
+    private void RefreshHealthBar()
+    {
+        _slider.value = _zombie.Health / _zombie.MaxHealth;
     }
 }
