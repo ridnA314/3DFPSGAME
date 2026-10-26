@@ -35,7 +35,8 @@ public class PlayerGunFire : MonoBehaviour
 
         _timer += Time.deltaTime * _fireRate;
         //1. mouse left click
-        if (Input.GetButton("Fire1") && _timer >= _fireInterval && _remainingAmmo > 0)
+        bool isMouseVisible = Cursor.visible;
+        if (!isMouseVisible && Input.GetButton("Fire1") && _timer >= _fireInterval && _remainingAmmo > 0)
         {
             Shoot();
             _timer = 0f;

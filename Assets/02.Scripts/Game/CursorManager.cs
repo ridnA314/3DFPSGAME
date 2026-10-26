@@ -7,6 +7,20 @@ public class CursorManager : MonoBehaviour
         LockCursor();
     }
 
+    private void Update()
+    {
+        if (!GameManager.Instance.IsPlaying()) return;
+
+        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        {
+            UnLockCursor();
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftAlt))
+        {
+            LockCursor();
+        }
+    }
+
     private void LockCursor()
     {
         Cursor.lockState = CursorLockMode.Locked; //fix mouse cursor at center of screen
