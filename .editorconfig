@@ -1,0 +1,6 @@
+root = true
+
+[*.cs]
+# Keep attribute line breaks as written, so `[Header("...")]` stays on its own line
+# above `[SerializeField] private ...` instead of being joined by the formatter.
+resharper_keep_existing_attribute_arrangement = true
