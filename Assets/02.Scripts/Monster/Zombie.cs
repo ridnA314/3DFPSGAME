@@ -35,11 +35,14 @@ public class Zombie : MonoBehaviour, IDamageable
     [SerializeField] private float _stunTime = 0.3f;
     [SerializeField] private float _moveSpeedScalar = 5f;
     [SerializeField] private float _maxHealth = 30f;
+    [Tooltip("Offset from the spawn position (not a world position)")]
     [SerializeField] private Vector3 _patrolTargetPosition;
     [SerializeField] private float _patrolWaitingTime = 3f;
 
     [Header("Effect")]
     [SerializeField] private GameObject _bloodSprayPrefab;
+
+    public const float ArrivalTolerance = 0.5f;
 
     public float MaxHealth => _maxHealth;
     private float _health;
@@ -51,7 +54,7 @@ public class Zombie : MonoBehaviour, IDamageable
     public float AttackRange => _attackRange;
     public float AttackSpeed => _attackSpeed;
     public float StunTime => _stunTime;
-    public Vector3 PatrolTargetPosition => _patrolTargetPosition;
+    public Vector3 PatrolTargetPosition => StartPosition + _patrolTargetPosition;
     public float PatrolWaitingTime => _patrolWaitingTime;
 
     public Vector3 StartPosition { get; private set; }
@@ -134,6 +137,20 @@ public class Zombie : MonoBehaviour, IDamageable
         _state = next;
         _currentState = _states[next];
         _currentState.Enter();
+    }
+
+    // distance on the XZ plane (ignores height difference)
+    public float PlanarDistanceTo(Vector3 target)
+    {
+        Vector3 diff = target - transform.position;
+        diff.y = 0f;
+        return diff.magnitude;
+    }
+
+    // true when the agent has finished moving along the path requested by SetDestination
+    public bool HasReachedDestination()
+    {
+        return !Agent.pathPending && Agent.remainingDistance <= Agent.stoppingDistance + ArrivalTolerance;
     }
 
     public void StopAgentMove()

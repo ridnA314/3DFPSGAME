@@ -372,7 +372,7 @@ MonoBehaviour:
   _stunTime: 0.3
   _moveSpeedScalar: 5
   _maxHealth: 30
-  _patrolTargetPosition: {x: 2, y: 1, z: 12}
+  _patrolTargetPosition: {x: 6, y: 0, z: -8}
   _patrolWaitingTime: 3
   _bloodSprayPrefab: {fileID: 1000013355911406, guid: d32aa916f50cac94db11e6f19821a58f, type: 3}
 --- !u!114 &1880803479828013488
