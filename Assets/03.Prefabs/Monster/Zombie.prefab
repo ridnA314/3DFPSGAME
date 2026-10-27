@@ -320,11 +320,12 @@ MonoBehaviour:
   _attackDamage: 10
   _attackRange: 1.5
   _attackSpeed: 5
-  _stunTime: 0.3
+  _stunTime: 0.5
   _moveSpeedScalar: 5
-  _maxHealth: 30
+  _maxHealth: 100
   _patrolTargetPosition: {x: 6, y: 0, z: -8}
   _patrolWaitingTime: 3
+  _deathWaitingTime: 2
   _bloodSprayPrefab: {fileID: 1000013355911406, guid: d32aa916f50cac94db11e6f19821a58f, type: 3}
 --- !u!114 &1880803479828013488
 MonoBehaviour:

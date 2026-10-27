@@ -32,7 +32,7 @@ public class Zombie : MonoBehaviour, IDamageable
     [SerializeField] private float _attackDamage = 10f;
     [SerializeField] private float _attackRange = 1.5f;
     [SerializeField] private float _attackSpeed = 8f;
-    [SerializeField] private float _stunTime = 0.3f;
+    [SerializeField] private float _stunTime = 0.5f;
     [SerializeField] private float _moveSpeedScalar = 5f;
     [SerializeField] private float _maxHealth = 30f;
 
@@ -137,6 +137,7 @@ public class Zombie : MonoBehaviour, IDamageable
             bloodSpray.transform.forward = damageInfo.HitNormal;
 
             // stun a moment
+            _animator.Play("Hit");
             ChangeState(ZombieState.Hit);
         }
         else
