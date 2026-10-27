@@ -42,7 +42,8 @@ public class Zombie : MonoBehaviour, IDamageable
     [Header("Effect")]
     [SerializeField] private GameObject _bloodSprayPrefab;
 
-    public const float ArrivalTolerance = 0.5f;
+    private const float ArrivalTolerance = 0.5f;
+    private const float PatrolSampleDistance = 5f;
 
     public float MaxHealth => _maxHealth;
     private float _health;
@@ -54,7 +55,7 @@ public class Zombie : MonoBehaviour, IDamageable
     public float AttackRange => _attackRange;
     public float AttackSpeed => _attackSpeed;
     public float StunTime => _stunTime;
-    public Vector3 PatrolTargetPosition => StartPosition + _patrolTargetPosition;
+    public Vector3 PatrolTargetPosition { get; private set; }
     public float PatrolWaitingTime => _patrolWaitingTime;
 
     public Vector3 StartPosition { get; private set; }
@@ -90,6 +91,12 @@ public class Zombie : MonoBehaviour, IDamageable
 
         Agent = GetComponent<NavMeshAgent>();
         Agent.speed = _moveSpeedScalar;
+
+        // keep the patrol point on the NavMesh so the agent can actually reach it
+        Vector3 patrolPoint = StartPosition + _patrolTargetPosition;
+        PatrolTargetPosition = NavMesh.SamplePosition(patrolPoint, out NavMeshHit hit, PatrolSampleDistance, NavMesh.AllAreas)
+            ? hit.position
+            : StartPosition;
 
         _state = ZombieState.Idle;
         _currentState = _states[_state];
@@ -147,10 +154,10 @@ public class Zombie : MonoBehaviour, IDamageable
         return diff.magnitude;
     }
 
-    // true when the agent has finished moving along the path requested by SetDestination
-    public bool HasReachedDestination()
+    // The agent stops stoppingDistance short of its destination, so the arrival check must include it
+    public bool IsNear(Vector3 target)
     {
-        return !Agent.pathPending && Agent.remainingDistance <= Agent.stoppingDistance + ArrivalTolerance;
+        return PlanarDistanceTo(target) <= Agent.stoppingDistance + ArrivalTolerance;
     }
 
     public void StopAgentMove()

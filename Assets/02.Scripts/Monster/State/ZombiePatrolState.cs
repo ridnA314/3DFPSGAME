@@ -1,7 +1,5 @@
 // patrol to certain position
 
-using UnityEngine.AI;
-
 public class ZombiePatrolState : ZombieStateBase
 {
     public ZombiePatrolState(Zombie zombie) : base(zombie)
@@ -17,9 +15,7 @@ public class ZombiePatrolState : ZombieStateBase
 
     public override void Tick()
     {
-        //if (Zombie.PlanarDistanceTo(Zombie.PatrolTargetPosition) < Zombie.ArrivalTolerance ||
-        //    Zombie.HasReachedDestination())
-        if (Zombie.Agent.pathStatus == NavMeshPathStatus.PathComplete)
+        if (Zombie.IsNear(Zombie.PatrolTargetPosition))
         {
             Zombie.ChangeState(ZombieState.Idle);
         }

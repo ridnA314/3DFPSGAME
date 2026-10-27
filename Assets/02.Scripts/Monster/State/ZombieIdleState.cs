@@ -19,7 +19,7 @@ public class ZombieIdleState : ZombieStateBase
 
         _patrolTimer += Time.deltaTime;
         if (_patrolTimer >= Zombie.PatrolWaitingTime &&
-            Zombie.PlanarDistanceTo(Zombie.PatrolTargetPosition) <= Zombie.ArrivalTolerance)
+            Zombie.IsNear(Zombie.PatrolTargetPosition))
         {
             Zombie.ChangeState(ZombieState.Comeback);
             return;
