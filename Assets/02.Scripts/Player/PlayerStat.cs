@@ -53,7 +53,7 @@ public class PlayerStat : MonoBehaviour
         if (damage < 0) return;
         if (_currentHealth <= 0) return;
 
-        _currentHealth = Mathf.Clamp(_currentHealth + damage, 0, _maxHealth);
+        _currentHealth = Mathf.Clamp(_currentHealth - damage, 0, _maxHealth);
         UIManager.Instance?.RefreshPlayerHealthBar();
     }
 
