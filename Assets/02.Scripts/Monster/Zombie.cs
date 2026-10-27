@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 //Finite State Machine(FSM) : there exist finite state, and act different action by each state
 // - state : that object has condition or situation
@@ -17,6 +18,7 @@ public enum ZombieState
     Patrol, // Patrol : patrol certain distance
 }
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class Zombie : MonoBehaviour, IDamageable
 {
     [SerializeField] private ZombieType _type;
@@ -46,9 +48,9 @@ public class Zombie : MonoBehaviour, IDamageable
 
     private float _patrolTimer;
     private float _attackTimer;
-    private CharacterController _controller;
     private Vector3 _startPosition;
     private GameObject _player;
+    private NavMeshAgent _agent;
 
     private ZombieState _state;
 
@@ -64,9 +66,11 @@ public class Zombie : MonoBehaviour, IDamageable
         _patrolTimer = 0f;
         _attackTimer = 0f;
 
-        _controller = GetComponent<CharacterController>();
         _startPosition = transform.position;
         _player = GameObject.FindGameObjectWithTag("Player");
+
+        _agent = GetComponent<NavMeshAgent>();
+        _agent.speed = _moveSpeedScalar;
 
         _state = ZombieState.Idle;
 
@@ -140,7 +144,6 @@ public class Zombie : MonoBehaviour, IDamageable
 
     private IEnumerator Death_Coroutine()
     {
-        _controller.enabled = false;
         yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
     }
@@ -184,12 +187,7 @@ public class Zombie : MonoBehaviour, IDamageable
         }
 
         //ToDo. Play Walk animation
-        Vector3 direction = _patrolTargetPosition - transform.position;
-        direction.y = 0f;
-        direction.Normalize();
-
-        transform.forward = direction;
-        _controller.SimpleMove(direction * _moveSpeedScalar);
+        _agent.SetDestination(_patrolTargetPosition);
     }
 
     private void Trace()
@@ -213,12 +211,7 @@ public class Zombie : MonoBehaviour, IDamageable
             return;
         }
 
-        Vector3 direction = _player.transform.position - transform.position;
-        direction.y = 0f;
-        direction.Normalize();
-
-        transform.forward = direction;
-        _controller.SimpleMove(direction * _moveSpeedScalar);
+        _agent.SetDestination(_player.transform.position);
     }
 
     private void Comeback()
@@ -230,12 +223,7 @@ public class Zombie : MonoBehaviour, IDamageable
             return;
         }
 
-        Vector3 direction = _startPosition - transform.position;
-        direction.y = 0f;
-        direction.Normalize();
-
-        transform.forward = direction;
-        _controller.SimpleMove(direction * _moveSpeedScalar);
+        _agent.SetDestination(_startPosition);
     }
 
     // Attack : attack per certain interval

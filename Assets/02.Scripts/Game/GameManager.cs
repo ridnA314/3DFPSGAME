@@ -44,7 +44,6 @@ public class GameManager : MonoBehaviour
         _currentStageId = 1;
 
         StartCoroutine(StartSequence_Coroutine());
-        ZombieSpawner.Instance?.StartSpawn();
     }
 
     public bool IsPlaying()
@@ -65,6 +64,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         UIManager.Instance?.SetActiveStateText(false);
+        ZombieSpawner.Instance?.StartSpawn();
     }
 
     public void GameOver()
