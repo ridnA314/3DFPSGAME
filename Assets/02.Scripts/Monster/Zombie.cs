@@ -135,6 +135,7 @@ public class Zombie : MonoBehaviour, IDamageable
 
     private IEnumerator Hit_Coroutine()
     {
+        StopAgentMove();
         yield return new WaitForSeconds(_stunTime);
 
         // Trace because attacked
@@ -144,6 +145,7 @@ public class Zombie : MonoBehaviour, IDamageable
 
     private IEnumerator Death_Coroutine()
     {
+        StopAgentMove();
         yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
     }
@@ -151,6 +153,8 @@ public class Zombie : MonoBehaviour, IDamageable
     // just wait
     private void Idle()
     {
+        StopAgentMove();
+
         _patrolTimer += Time.deltaTime;
         if (_patrolTimer >= _patrolWaitingTime &&
             Vector3.Distance(transform.position, _patrolTargetPosition) <= 0.5f)
@@ -217,7 +221,9 @@ public class Zombie : MonoBehaviour, IDamageable
     private void Comeback()
     {
         // When achieve at first position, trans to Idle State
-        if (Vector3.Distance(transform.position, _startPosition) <= 0.5f)
+        //if (Vector3.Distance(transform.position, _startPosition) < _agent.stoppingDistance)
+        //if (_agent.remainingDistance <= _agent.stoppingDistance)
+        if (_agent.pathStatus == NavMeshPathStatus.PathComplete)
         {
             ChangeToIdle();
             return;
@@ -229,6 +235,8 @@ public class Zombie : MonoBehaviour, IDamageable
     // Attack : attack per certain interval
     private void Attack()
     {
+        StopAgentMove();
+
         // ditance to player greater than attack range
         float distanceThreshold = Vector3.Distance(transform.position, _player.transform.position);
         if (distanceThreshold > _attackRange)
@@ -258,5 +266,11 @@ public class Zombie : MonoBehaviour, IDamageable
         Debug.Log($"{_state} -> {ZombieState.Idle}");
         _patrolTimer = 0f;
         _state = ZombieState.Idle;
+    }
+
+    private void StopAgentMove()
+    {
+        _agent.ResetPath();
+        _agent.velocity = Vector3.zero;
     }
 }
