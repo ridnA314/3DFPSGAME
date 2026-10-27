@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,6 +7,7 @@ using UnityEngine.AI;
 // - state : that object has condition or situation
 // - transition : current state trans to other state by condition
 // - and setting rule is Machine by using above method
+// Each state's behavior lives in its own class (see Monster/State/Zombie*State.cs)
 public enum ZombieState
 {
     Idle, // waiting : just wait for player at own place
@@ -40,18 +41,25 @@ public class Zombie : MonoBehaviour, IDamageable
     [Header("Effect")]
     [SerializeField] private GameObject _bloodSprayPrefab;
 
-    private const float AttackInterval = 10f;
-
     public float MaxHealth => _maxHealth;
     private float _health;
     public float Health => _health;
 
-    private float _patrolTimer;
-    private float _attackTimer;
-    private Vector3 _startPosition;
-    private GameObject _player;
-    private NavMeshAgent _agent;
+    public float DetectionRange => _detectionRange;
+    public float ComebackRange => _comebackRange;
+    public float AttackDamage => _attackDamage;
+    public float AttackRange => _attackRange;
+    public float AttackSpeed => _attackSpeed;
+    public float StunTime => _stunTime;
+    public Vector3 PatrolTargetPosition => _patrolTargetPosition;
+    public float PatrolWaitingTime => _patrolWaitingTime;
 
+    public Vector3 StartPosition { get; private set; }
+    public GameObject Player { get; private set; }
+    public NavMeshAgent Agent { get; private set; }
+
+    private Dictionary<ZombieState, ZombieStateBase> _states;
+    private ZombieStateBase _currentState;
     private ZombieState _state;
 
     public event Action OnDamaged;
@@ -59,20 +67,30 @@ public class Zombie : MonoBehaviour, IDamageable
     private void Awake()
     {
         _health = _maxHealth;
+
+        _states = new Dictionary<ZombieState, ZombieStateBase>
+        {
+            { ZombieState.Idle, new ZombieIdleState(this) },
+            { ZombieState.Trace, new ZombieTraceState(this) },
+            { ZombieState.Comeback, new ZombieComebackState(this) },
+            { ZombieState.Attack, new ZombieAttackState(this) },
+            { ZombieState.Hit, new ZombieHitState(this) },
+            { ZombieState.Death, new ZombieDeathState(this) },
+            { ZombieState.Patrol, new ZombiePatrolState(this) },
+        };
     }
 
     private void Start()
     {
-        _patrolTimer = 0f;
-        _attackTimer = 0f;
+        StartPosition = transform.position;
+        Player = GameObject.FindGameObjectWithTag("Player");
 
-        _startPosition = transform.position;
-        _player = GameObject.FindGameObjectWithTag("Player");
-
-        _agent = GetComponent<NavMeshAgent>();
-        _agent.speed = _moveSpeedScalar;
+        Agent = GetComponent<NavMeshAgent>();
+        Agent.speed = _moveSpeedScalar;
 
         _state = ZombieState.Idle;
+        _currentState = _states[_state];
+        _currentState.Enter();
 
         GameManager.Instance?.IncreaseEnemy();
     }
@@ -81,26 +99,7 @@ public class Zombie : MonoBehaviour, IDamageable
     {
         if (!GameManager.Instance.IsPlaying()) return;
 
-        switch (_state)
-        {
-            case ZombieState.Idle:
-                Idle();
-                //ToDO : wait : just wait for player at current position
-                break;
-            case ZombieState.Trace:
-                Trace();
-                //ToDO : chase to Player
-                break;
-            case ZombieState.Comeback:
-                Comeback();
-                break;
-            case ZombieState.Attack:
-                Attack();
-                break;
-            case ZombieState.Patrol:
-                Patrol();
-                break;
-        }
+        _currentState?.Tick();
     }
 
     public void TakeDamage(DamageInfo damageInfo)
@@ -111,8 +110,6 @@ public class Zombie : MonoBehaviour, IDamageable
         _health -= damageInfo.Value;
         OnDamaged?.Invoke();
 
-        StopAllCoroutines();
-
         if (_health > 0f)
         {
             GameObject bloodSpray = Instantiate(_bloodSprayPrefab, transform);
@@ -120,157 +117,28 @@ public class Zombie : MonoBehaviour, IDamageable
             bloodSpray.transform.forward = damageInfo.HitNormal;
 
             // stun a moment
-            Debug.Log($"{_state} -> {ZombieState.Hit}");
-            _state = ZombieState.Hit;
-            StartCoroutine(Hit_Coroutine());
+            ChangeState(ZombieState.Hit);
         }
         else
         {
             GameManager.Instance?.DecreaseEnemy();
-            Debug.Log($"{_state} -> {ZombieState.Death}");
-            _state = ZombieState.Death;
-            StartCoroutine(Death_Coroutine());
+            ChangeState(ZombieState.Death);
         }
     }
 
-    private IEnumerator Hit_Coroutine()
+    public void ChangeState(ZombieState next)
     {
-        StopAgentMove();
-        yield return new WaitForSeconds(_stunTime);
+        Debug.Log($"{_state} -> {next}");
 
-        // Trace because attacked
-        Debug.Log($"{_state} -> {ZombieState.Trace}");
-        _state = ZombieState.Trace;
+        _currentState?.Exit();
+        _state = next;
+        _currentState = _states[next];
+        _currentState.Enter();
     }
 
-    private IEnumerator Death_Coroutine()
+    public void StopAgentMove()
     {
-        StopAgentMove();
-        yield return new WaitForSeconds(0.5f);
-        Destroy(gameObject);
-    }
-
-    // just wait
-    private void Idle()
-    {
-        StopAgentMove();
-
-        _patrolTimer += Time.deltaTime;
-        if (_patrolTimer >= _patrolWaitingTime &&
-            Vector3.Distance(transform.position, _patrolTargetPosition) <= 0.5f)
-        {
-            Debug.Log($"{_state} -> {ZombieState.Comeback}");
-            _state = ZombieState.Comeback;
-            return;
-        }
-
-        if (_patrolTimer >= _patrolWaitingTime)
-        {
-            Debug.Log($"{_state} -> {ZombieState.Patrol}");
-            _patrolTimer = 0f;
-            _state = ZombieState.Patrol;
-            return;
-        }
-
-        //ToDo. Play Idle animation
-        //when close to player, trans to Trace State
-        float distanceThreshold = Vector3.Distance(transform.position, _player.transform.position);
-        if (distanceThreshold <= _detectionRange)
-        {
-            Debug.Log($"{_state} -> {ZombieState.Trace}");
-            _state = ZombieState.Trace;
-        }
-    }
-
-    private void Patrol()
-    {
-        if (Vector3.Distance(transform.position, _patrolTargetPosition) < 0.5f)
-        {
-            ChangeToIdle();
-            return;
-        }
-
-        //ToDo. Play Walk animation
-        _agent.SetDestination(_patrolTargetPosition);
-    }
-
-    private void Trace()
-    {
-        //ToDo. Play Run animation
-
-        // too fat from first position
-        if (Vector3.Distance(transform.position, _startPosition) > _comebackRange)
-        {
-            Debug.Log($"{_state} -> {ZombieState.Comeback}");
-            _state = ZombieState.Comeback;
-            return;
-        }
-
-        // Attack when distance self and player is less than attack range
-        if (Vector3.Distance(transform.position, _player.transform.position) <= _attackRange)
-        {
-            _attackTimer = 0f;
-            Debug.Log($"{_state} -> {ZombieState.Attack}");
-            _state = ZombieState.Attack;
-            return;
-        }
-
-        _agent.SetDestination(_player.transform.position);
-    }
-
-    private void Comeback()
-    {
-        // When achieve at first position, trans to Idle State
-        //if (Vector3.Distance(transform.position, _startPosition) < _agent.stoppingDistance)
-        //if (_agent.remainingDistance <= _agent.stoppingDistance)
-        if (_agent.pathStatus == NavMeshPathStatus.PathComplete)
-        {
-            ChangeToIdle();
-            return;
-        }
-
-        _agent.SetDestination(_startPosition);
-    }
-
-    // Attack : attack per certain interval
-    private void Attack()
-    {
-        StopAgentMove();
-
-        // ditance to player greater than attack range
-        float distanceThreshold = Vector3.Distance(transform.position, _player.transform.position);
-        if (distanceThreshold > _attackRange)
-        {
-            Debug.Log($"{_state} -> {ZombieState.Trace}");
-            _state = ZombieState.Trace;
-        }
-
-        _attackTimer += Time.deltaTime * _attackSpeed;
-        if (_attackTimer >= AttackInterval)
-        {
-            //ToDo. Play Attack animation
-            DamageInfo info = new DamageInfo()
-            {
-                Value = _attackDamage,
-                HitPoint = _player.transform.position,
-                HitNormal = (transform.position - _player.transform.position).normalized,
-            };
-
-            _player.GetComponent<Player>()?.TakeDamage(info);
-            _attackTimer = 0f;
-        }
-    }
-
-    private void ChangeToIdle()
-    {
-        Debug.Log($"{_state} -> {ZombieState.Idle}");
-        _patrolTimer = 0f;
-        _state = ZombieState.Idle;
-    }
-
-    private void StopAgentMove()
-    {
-        _agent.ResetPath();
-        _agent.velocity = Vector3.zero;
+        Agent.ResetPath();
+        Agent.velocity = Vector3.zero;
     }
 }
