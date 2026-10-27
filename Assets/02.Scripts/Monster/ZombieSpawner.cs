@@ -89,6 +89,27 @@ public class ZombieSpawner : MonoBehaviour
         _spawnTables.Clear();
     }
 
+    public int CurrentMaxZombieCount()
+    {
+        GameManager manager = GameManager.Instance;
+        if (manager == null) return 0;
+
+        int stageId = manager.CurrentStageId;
+        int count = 0;
+        foreach (ZombieSpawnTable table in _spawnTables.Values)
+        {
+            if (table.StageID == stageId)
+            {
+                foreach (ZombieSpawnData data in table.ZombieSpawnDataList)
+                {
+                    count += data.SpawnCount;
+                }
+            }
+        }
+
+        return count;
+    }
+
     private IEnumerator Spawn_Coroutine(ZombieSpawnTable table)
     {
         int spawnCount;

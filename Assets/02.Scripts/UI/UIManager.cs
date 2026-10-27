@@ -27,7 +27,7 @@ public class UIManager : MonoBehaviour
     private const string StartText = "<color=#00f0f0>시작!</color>";
     private const string GameOverText = "<color=#f00000>게임 오버</color>";
 
-    private const string RemainingEnemyText = "Enemy Count : {0}";
+    private const string RemainingEnemyText = "{0} Stage : {1} / {2}";
 
     private void Awake()
     {
@@ -95,6 +95,21 @@ public class UIManager : MonoBehaviour
 
     public void RefreshEnemyCount(int count)
     {
-        _remainingEnemyText.text = string.Format(RemainingEnemyText, count);
+        int stageId = 1;
+        int maxCount = 1;
+
+        GameManager gameManager = GameManager.Instance;
+        if (gameManager != null)
+        {
+            stageId = gameManager.CurrentStageId;
+        }
+
+        ZombieSpawner zombieSpawner = ZombieSpawner.Instance;
+        if (zombieSpawner != null)
+        {
+            maxCount = zombieSpawner.CurrentMaxZombieCount();
+        }
+
+        _remainingEnemyText.text = string.Format(RemainingEnemyText, stageId, count, maxCount);
     }
 }
