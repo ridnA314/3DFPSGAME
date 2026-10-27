@@ -5,7 +5,9 @@ public class ZombieIdleState : ZombieStateBase
 {
     private float _patrolTimer;
 
-    public ZombieIdleState(Zombie zombie) : base(zombie) { }
+    public ZombieIdleState(Zombie zombie) : base(zombie)
+    {
+    }
 
     public override void Enter()
     {
@@ -21,12 +23,14 @@ public class ZombieIdleState : ZombieStateBase
         if (_patrolTimer >= Zombie.PatrolWaitingTime &&
             Zombie.IsNear(Zombie.PatrolTargetPosition))
         {
+            Zombie.Animator.SetTrigger("IdleToMove");
             Zombie.ChangeState(ZombieState.Comeback);
             return;
         }
 
         if (_patrolTimer >= Zombie.PatrolWaitingTime)
         {
+            Zombie.Animator.SetTrigger("IdleToMove");
             Zombie.ChangeState(ZombieState.Patrol);
             return;
         }
@@ -35,6 +39,7 @@ public class ZombieIdleState : ZombieStateBase
         //when close to player, trans to Trace State
         if (Vector3.Distance(Zombie.transform.position, Zombie.Player.transform.position) <= Zombie.DetectionRange)
         {
+            Zombie.Animator.SetTrigger("IdleToRun");
             Zombie.ChangeState(ZombieState.Trace);
         }
     }

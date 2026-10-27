@@ -5,7 +5,9 @@ public class ZombieHitState : ZombieStateBase
 {
     private float _stunTimer;
 
-    public ZombieHitState(Zombie zombie) : base(zombie) { }
+    public ZombieHitState(Zombie zombie) : base(zombie)
+    {
+    }
 
     public override void Enter()
     {
@@ -18,6 +20,7 @@ public class ZombieHitState : ZombieStateBase
         _stunTimer += Time.deltaTime;
         if (_stunTimer >= Zombie.StunTime)
         {
+            Zombie.Animator.Play("Run");
             // Trace because attacked
             Zombie.ChangeState(ZombieState.Trace);
         }

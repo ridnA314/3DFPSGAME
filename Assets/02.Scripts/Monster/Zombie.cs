@@ -35,9 +35,13 @@ public class Zombie : MonoBehaviour, IDamageable
     [SerializeField] private float _stunTime = 0.3f;
     [SerializeField] private float _moveSpeedScalar = 5f;
     [SerializeField] private float _maxHealth = 30f;
+
     [Tooltip("Offset from the spawn position (not a world position)")]
     [SerializeField] private Vector3 _patrolTargetPosition;
+
     [SerializeField] private float _patrolWaitingTime = 3f;
+    [SerializeField] private float _deathWaitingTime = 2f;
+    public float DeathWaitingTime => _deathWaitingTime;
 
     [Header("Effect")]
     [SerializeField] private GameObject _bloodSprayPrefab;
@@ -63,13 +67,18 @@ public class Zombie : MonoBehaviour, IDamageable
     public NavMeshAgent Agent { get; private set; }
 
     private Dictionary<ZombieState, ZombieStateBase> _states;
+    public IReadOnlyDictionary<ZombieState, ZombieStateBase> States => _states;
     private ZombieStateBase _currentState;
     private ZombieState _state;
+    private Animator _animator;
+    public Animator Animator => _animator;
 
     public event Action OnDamaged;
 
     private void Awake()
     {
+        _animator = GetComponentInChildren<Animator>();
+
         _health = _maxHealth;
 
         _states = new Dictionary<ZombieState, ZombieStateBase>
@@ -94,9 +103,10 @@ public class Zombie : MonoBehaviour, IDamageable
 
         // keep the patrol point on the NavMesh so the agent can actually reach it
         Vector3 patrolPoint = StartPosition + _patrolTargetPosition;
-        PatrolTargetPosition = NavMesh.SamplePosition(patrolPoint, out NavMeshHit hit, PatrolSampleDistance, NavMesh.AllAreas)
-            ? hit.position
-            : StartPosition;
+        PatrolTargetPosition =
+            NavMesh.SamplePosition(patrolPoint, out NavMeshHit hit, PatrolSampleDistance, NavMesh.AllAreas)
+                ? hit.position
+                : StartPosition;
 
         _state = ZombieState.Idle;
         _currentState = _states[_state];
@@ -132,6 +142,7 @@ public class Zombie : MonoBehaviour, IDamageable
         else
         {
             GameManager.Instance?.DecreaseEnemy();
+            _animator.Play("Death");
             ChangeState(ZombieState.Death);
         }
     }

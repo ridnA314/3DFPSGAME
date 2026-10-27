@@ -16,6 +16,7 @@ public class ZombieComebackState : ZombieStateBase
         // When achieve at first position, trans to Idle State
         if (Zombie.IsNear(Zombie.StartPosition))
         {
+            Zombie.Animator.SetTrigger("MoveToIdle");
             Zombie.ChangeState(ZombieState.Idle);
         }
     }

@@ -17,6 +17,7 @@ public class ZombiePatrolState : ZombieStateBase
     {
         if (Zombie.IsNear(Zombie.PatrolTargetPosition))
         {
+            Zombie.Animator.SetTrigger("MoveToIdle");
             Zombie.ChangeState(ZombieState.Idle);
         }
     }

@@ -8,7 +8,9 @@ public class ZombieAttackState : ZombieStateBase
     private float _attackTimer;
     private Player _targetPlayer;
 
-    public ZombieAttackState(Zombie zombie) : base(zombie) { }
+    public ZombieAttackState(Zombie zombie) : base(zombie)
+    {
+    }
 
     public override void Enter()
     {
@@ -23,6 +25,7 @@ public class ZombieAttackState : ZombieStateBase
         // distance to player greater than attack range
         if (Vector3.Distance(Zombie.transform.position, Zombie.Player.transform.position) > Zombie.AttackRange)
         {
+            Zombie.Animator.Play("Run");
             Zombie.ChangeState(ZombieState.Trace);
             return;
         }
@@ -30,7 +33,12 @@ public class ZombieAttackState : ZombieStateBase
         _attackTimer += Time.deltaTime * Zombie.AttackSpeed;
         if (_attackTimer < AttackInterval) return;
 
-        //ToDo. Play Attack animation
+        Zombie.Animator.Play("Attack");
+        _attackTimer = 0f;
+    }
+
+    public void AttackAction()
+    {
         Vector3 playerPosition = Zombie.Player.transform.position;
         DamageInfo info = new DamageInfo()
         {
@@ -40,6 +48,5 @@ public class ZombieAttackState : ZombieStateBase
         };
 
         _targetPlayer?.TakeDamage(info);
-        _attackTimer = 0f;
     }
 }
