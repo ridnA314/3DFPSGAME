@@ -17,6 +17,7 @@ public enum ZombieState
     Hit, // Hit : attacked and then stun just moment
     Death, // Dead : lay on ground, and do not act
     Patrol, // Patrol : patrol certain distance
+    Jump, // Jump : traverse an off-mesh link by jumping
 }
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -42,6 +43,12 @@ public class Zombie : MonoBehaviour, IDamageable
     [SerializeField] private float _patrolWaitingTime = 3f;
     [SerializeField] private float _deathWaitingTime = 2f;
     public float DeathWaitingTime => _deathWaitingTime;
+
+    [Header("Jump")]
+    [SerializeField] private float _jumpHeight = 1.5f;
+    [SerializeField] private float _jumpSpeed = 6f;
+    public float JumpHeight => _jumpHeight;
+    public float JumpSpeed => _jumpSpeed;
 
     [Header("Effect")]
     [SerializeField] private GameObject _bloodSprayPrefab;
@@ -70,6 +77,7 @@ public class Zombie : MonoBehaviour, IDamageable
     public IReadOnlyDictionary<ZombieState, ZombieStateBase> States => _states;
     private ZombieStateBase _currentState;
     private ZombieState _state;
+    public ZombieState PreviousState { get; private set; }
     private Animator _animator;
     public Animator Animator => _animator;
 
@@ -90,6 +98,7 @@ public class Zombie : MonoBehaviour, IDamageable
             { ZombieState.Hit, new ZombieHitState(this) },
             { ZombieState.Death, new ZombieDeathState(this) },
             { ZombieState.Patrol, new ZombiePatrolState(this) },
+            { ZombieState.Jump, new ZombieJumpState(this) },
         };
     }
 
@@ -100,6 +109,8 @@ public class Zombie : MonoBehaviour, IDamageable
 
         Agent = GetComponent<NavMeshAgent>();
         Agent.speed = _moveSpeedScalar;
+        // off-mesh links are traversed by ZombieJumpState instead of the agent's built-in slide
+        Agent.autoTraverseOffMeshLink = false;
 
         // keep the patrol point on the NavMesh so the agent can actually reach it
         Vector3 patrolPoint = StartPosition + _patrolTargetPosition;
@@ -119,7 +130,18 @@ public class Zombie : MonoBehaviour, IDamageable
     {
         if (!GameManager.Instance.IsPlaying()) return;
 
+        if (IsMovingState() && Agent.isOnOffMeshLink)
+        {
+            ChangeState(ZombieState.Jump);
+            return;
+        }
+
         _currentState?.Tick();
+    }
+
+    private bool IsMovingState()
+    {
+        return _state == ZombieState.Trace || _state == ZombieState.Patrol || _state == ZombieState.Comeback;
     }
 
     public void TakeDamage(DamageInfo damageInfo)
@@ -135,6 +157,9 @@ public class Zombie : MonoBehaviour, IDamageable
             GameObject bloodSpray = Instantiate(_bloodSprayPrefab, transform);
             bloodSpray.transform.position = damageInfo.HitPoint;
             bloodSpray.transform.forward = damageInfo.HitNormal;
+
+            // no stun while jumping, the zombie must finish the jump first
+            if (_state == ZombieState.Jump) return;
 
             // stun a moment
             _animator.Play("Hit");
@@ -153,6 +178,7 @@ public class Zombie : MonoBehaviour, IDamageable
         Debug.Log($"{_state} -> {next}");
 
         _currentState?.Exit();
+        PreviousState = _state;
         _state = next;
         _currentState = _states[next];
         _currentState.Enter();
