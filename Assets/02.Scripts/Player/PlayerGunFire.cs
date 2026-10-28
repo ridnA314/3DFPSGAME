@@ -51,10 +51,7 @@ public class PlayerGunFire : MonoBehaviour
             UIManager.Instance?.RefreshAmmo();
 
             Shoot();
-            if (_animator.GetFloat("MoveMotion") == 0f)
-            {
-                _animator.SetTrigger("Attack");
-            }
+            _animator.SetBool("Fire", true);
 
             if (_reloadCoroutine != null)
             {
@@ -62,6 +59,10 @@ public class PlayerGunFire : MonoBehaviour
                 StopCoroutine(_reloadCoroutine);
                 _reloadCoroutine = null;
             }
+        }
+        else
+        {
+            _animator.SetBool("Fire", false);
         }
 
         if (Input.GetButtonDown("Reload") && _reloadCoroutine == null)

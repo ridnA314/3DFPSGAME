@@ -5,6 +5,9 @@ public class Player : MonoBehaviour, IDamageable
 {
     [SerializeField] private PlayerStat _playerStat;
 
+    private Animator _animator;
+    private int _injuredLayerIndex;
+
     public event Action<float> OnDamaged;
     public event Action PlayEffect;
 
@@ -14,6 +17,9 @@ public class Player : MonoBehaviour, IDamageable
         {
             _playerStat = GetComponent<PlayerStat>();
         }
+
+        _animator = GetComponentInChildren<Animator>();
+        _injuredLayerIndex = _animator.GetLayerIndex("Injured Layer");
     }
 
     public void TakeDamage(DamageInfo damageInfo)
@@ -23,6 +29,11 @@ public class Player : MonoBehaviour, IDamageable
         //ScreenEffectManager.Instance?.ShowFlash();
         OnDamaged?.Invoke(damageInfo.Value);
         PlayEffect?.Invoke();
+
+        float healthPercentage = _playerStat.Health / _playerStat.MaxHealth; // Real number between with 0 ~ 1
+        float injured = Mathf.InverseLerp(0.5f, 0f, healthPercentage);
+        GameLogger.Log($"_injuredLayerIndex : {_injuredLayerIndex}");
+        _animator.SetLayerWeight(_injuredLayerIndex, injured);
         //_playerStat.ApplyDamage(damageInfo.Value);
 
         if (_playerStat.Health <= 0)
