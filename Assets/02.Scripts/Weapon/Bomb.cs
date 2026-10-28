@@ -9,8 +9,19 @@ public class Bomb : MonoBehaviour
 
     [SerializeField] private LayerMask _targetLayer;
 
+    private bool _isExploded;
+
+    private void OnEnable()
+    {
+        _isExploded = false;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
+        // several contacts can arrive in the same physics step, so explode and release only once
+        if (_isExploded) return;
+        _isExploded = true;
+
         ParticleSystem effect = Instantiate(_explosionEffectPrefab, transform.position, Quaternion.identity);
         effect.Play();
 
