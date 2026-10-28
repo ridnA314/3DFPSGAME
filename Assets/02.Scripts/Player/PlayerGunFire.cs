@@ -8,6 +8,7 @@ public class PlayerGunFire : MonoBehaviour
 
     [Header("Stat")]
     [SerializeField] private float _fireRate = 10f;
+
     [SerializeField] private float _range = 100f;
     [SerializeField] private float _damage = 10f;
     [SerializeField] private int _magazineSize = 30;
@@ -21,6 +22,13 @@ public class PlayerGunFire : MonoBehaviour
     private const float _reloadTime = 10f;
     private float _timer;
     private Coroutine _reloadCoroutine;
+
+    private Animator _animator;
+
+    private void Awake()
+    {
+        _animator = GetComponentInChildren<Animator>();
+    }
 
     private void Start()
     {
@@ -38,10 +46,15 @@ public class PlayerGunFire : MonoBehaviour
         bool isMouseVisible = Cursor.visible;
         if (!isMouseVisible && Input.GetButton("Fire1") && _timer >= _fireInterval && _remainingAmmo > 0)
         {
-            Shoot();
             _timer = 0f;
             _remainingAmmo--;
             UIManager.Instance?.RefreshAmmo();
+
+            Shoot();
+            if (_animator.GetFloat("MoveMotion") == 0f)
+            {
+                _animator.SetTrigger("Attack");
+            }
 
             if (_reloadCoroutine != null)
             {

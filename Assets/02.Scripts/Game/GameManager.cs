@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance => _instance;
 
     [SerializeField] private float _startTime;
+    [SerializeField] private Animator _playerAnimator;
 
     private GameState _state;
     public GameState State => _state;
@@ -72,6 +73,8 @@ public class GameManager : MonoBehaviour
         _state = GameState.GameOver;
         UIManager.Instance?.SetActiveStateText(true);
         UIManager.Instance?.SetGameOverText();
+
+        _playerAnimator.SetFloat("MoveMotion", 0f);
     }
 
     public void IncreaseEnemy()

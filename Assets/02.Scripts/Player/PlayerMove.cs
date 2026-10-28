@@ -17,6 +17,8 @@ public class PlayerMove : MonoBehaviour
 
     [SerializeField] private CharacterController _characterController;
 
+    private Animator _animator;
+
     private void Awake()
     {
         if (_characterController == null)
@@ -28,6 +30,8 @@ public class PlayerMove : MonoBehaviour
         {
             _playerStat = GetComponent<PlayerStat>();
         }
+
+        _animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
@@ -47,6 +51,7 @@ public class PlayerMove : MonoBehaviour
         //2. calculate direction by using keyboard input
         Vector3 direction = new Vector3(h, 0, v);
         direction.Normalize();
+        _animator.SetFloat("MoveMotion", direction.magnitude);
         direction = transform.TransformDirection(direction);
         //local coordinate : based on one target
         //world coordinate : based on world
