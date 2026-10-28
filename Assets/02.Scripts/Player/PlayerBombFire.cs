@@ -53,6 +53,8 @@ public class PlayerBombFire : MonoBehaviour
         bomb.transform.position = _firePoint.position;
 
         Rigidbody rigidbody = bomb.GetComponent<Rigidbody>();
+        rigidbody.linearVelocity = Vector3.zero;
+        rigidbody.angularVelocity = Vector3.zero;
         rigidbody.AddForce(Camera.main.transform.forward * (_throwPower * _chargeGauge), ForceMode.Impulse);
 
         _remainingBomb -= 1;
