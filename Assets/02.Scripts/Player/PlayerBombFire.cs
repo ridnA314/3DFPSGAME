@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerBombFire : MonoBehaviour
@@ -17,6 +18,17 @@ public class PlayerBombFire : MonoBehaviour
     private bool _isCharging;
     private float _chargeGauge;
     public float ChargeGauge => _chargeGauge;
+
+    private const float ThrowClipFrameRate = 30f;
+    private const int ThrowReleaseFrame = 55; // release frame of the 96-frame Toss Grenade clip
+    private static readonly int ThrowHash = Animator.StringToHash("Throw");
+    private Animator _animator;
+    private bool _isThrowing;
+
+    private void Awake()
+    {
+        _animator = GetComponentInChildren<Animator>();
+    }
 
     private void Start()
     {
@@ -38,13 +50,28 @@ public class PlayerBombFire : MonoBehaviour
         if (Input.GetButtonUp("Fire2"))
         {
             _isCharging = false;
-            Shoot();
+            if (!_isThrowing && _remainingBomb > 0)
+            {
+                StartCoroutine(Throw_Coroutine(_chargeGauge));
+            }
             _chargeGauge = 0f;
             UIManager.Instance?.RefreshBombGauge();
         }
     }
 
-    private void Shoot()
+    // play throw motion, then release the bomb at the frame where the hand lets go
+    private IEnumerator Throw_Coroutine(float chargeGauge)
+    {
+        _isThrowing = true;
+        _animator.SetTrigger(ThrowHash);
+
+        yield return new WaitForSeconds(ThrowReleaseFrame / ThrowClipFrameRate);
+
+        Shoot(chargeGauge);
+        _isThrowing = false;
+    }
+
+    private void Shoot(float chargeGauge)
     {
         if (_remainingBomb <= 0) return;
 
@@ -55,7 +82,7 @@ public class PlayerBombFire : MonoBehaviour
         Rigidbody rigidbody = bomb.GetComponent<Rigidbody>();
         rigidbody.linearVelocity = Vector3.zero;
         rigidbody.angularVelocity = Vector3.zero;
-        rigidbody.AddForce(Camera.main.transform.forward * (_throwPower * _chargeGauge), ForceMode.Impulse);
+        rigidbody.AddForce(Camera.main.transform.forward * (_throwPower * chargeGauge), ForceMode.Impulse);
 
         _remainingBomb -= 1;
         UIManager.Instance?.RefreshBomb();
