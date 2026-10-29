@@ -16,6 +16,9 @@ public class PlayerGunFire : MonoBehaviour
     public int MagazineSize => _magazineSize;
     [SerializeField] private float _reloadSpeed = 3f;
 
+    [SerializeField] private GameObject[] _muzzleFlashes;
+    [SerializeField] private float _flashTime = 0.05f;
+
     private int _remainingAmmo;
     public int RemainingAmmo => _remainingAmmo;
 
@@ -86,6 +89,8 @@ public class PlayerGunFire : MonoBehaviour
 
     private void Shoot()
     {
+        StartCoroutine(MuzzleFlash_Coroutine());
+
         //2. create lay, set fire position and direction
         Transform cameraTransform = Camera.main.transform;
         Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
@@ -112,5 +117,16 @@ public class PlayerGunFire : MonoBehaviour
             //If target is Zombie, call TakeDamage of Zombie
             hitInfo.collider.GetComponent<IDamageable>()?.TakeDamage(damageInfo);
         }
+    }
+
+    private IEnumerator MuzzleFlash_Coroutine()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, _muzzleFlashes.Length);
+        GameObject flash = _muzzleFlashes[randomIndex];
+        flash.SetActive(true);
+
+        yield return new WaitForSeconds(_flashTime);
+
+        flash.SetActive(false);
     }
 }
