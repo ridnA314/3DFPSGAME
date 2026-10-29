@@ -21,6 +21,8 @@ public class PlayerStat : MonoBehaviour
     private WeaponMode _weaponMode;
     public WeaponMode WeaponMode => _weaponMode;
 
+    public event Action ChangedWeapon;
+
     private void Awake()
     {
         _currentHealth = _maxHealth;
@@ -78,6 +80,7 @@ public class PlayerStat : MonoBehaviour
         }
 
         _weaponMode = (WeaponMode)changeMode;
+        ChangedWeapon?.Invoke();
     }
 
     public void RightChangeMode()
@@ -90,5 +93,6 @@ public class PlayerStat : MonoBehaviour
         }
 
         _weaponMode = (WeaponMode)changeMode;
+        ChangedWeapon?.Invoke();
     }
 }

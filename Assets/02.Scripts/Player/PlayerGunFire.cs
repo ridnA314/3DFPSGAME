@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -25,6 +26,8 @@ public class PlayerGunFire : MonoBehaviour
 
     private Animator _animator;
 
+    public event Action Fired;
+
     private void Awake()
     {
         _animator = GetComponentInChildren<Animator>();
@@ -34,7 +37,6 @@ public class PlayerGunFire : MonoBehaviour
     {
         _timer = 0f;
         _remainingAmmo = _magazineSize;
-        UIManager.Instance?.RefreshAmmo();
     }
 
     private void Update()
@@ -48,7 +50,7 @@ public class PlayerGunFire : MonoBehaviour
         {
             _timer = 0f;
             _remainingAmmo--;
-            UIManager.Instance?.RefreshAmmo();
+            Fired?.Invoke();
 
             Shoot();
             _animator.SetBool("Fire", true);
@@ -77,7 +79,7 @@ public class PlayerGunFire : MonoBehaviour
         yield return new WaitForSeconds(_reloadTime / _reloadSpeed);
 
         _remainingAmmo = _magazineSize;
-        UIManager.Instance?.RefreshAmmo();
+        Fired?.Invoke();
         GameLogger.Log("Reload Complete");
         _reloadCoroutine = null;
     }

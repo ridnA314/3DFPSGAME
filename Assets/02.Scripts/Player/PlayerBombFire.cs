@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -27,6 +28,9 @@ public class PlayerBombFire : MonoBehaviour
     private Animator _animator;
     private bool _isThrowing;
 
+    public event Action Throwed;
+    public event Action Charging;
+
     private void Awake()
     {
         _animator = GetComponentInChildren<Animator>();
@@ -37,8 +41,6 @@ public class PlayerBombFire : MonoBehaviour
     {
         _chargeGauge = 0f;
         _remainingBomb = _maxBomb;
-        UIManager.Instance?.RefreshBomb();
-        UIManager.Instance?.RefreshBombGauge();
     }
 
     private void Update()
@@ -60,7 +62,7 @@ public class PlayerBombFire : MonoBehaviour
             }
 
             _chargeGauge = 0f;
-            UIManager.Instance?.RefreshBombGauge();
+            Charging?.Invoke();
         }
     }
 
@@ -90,7 +92,7 @@ public class PlayerBombFire : MonoBehaviour
         rigidbody.AddForce(Camera.main.transform.forward * (_throwPower * chargeGauge), ForceMode.Impulse);
 
         _remainingBomb -= 1;
-        UIManager.Instance?.RefreshBomb();
+        Throwed?.Invoke();
     }
 
     private void Charge()
@@ -103,6 +105,6 @@ public class PlayerBombFire : MonoBehaviour
             _chargeGauge = _maxChargeGauge;
         }
 
-        UIManager.Instance?.RefreshBombGauge();
+        Charging?.Invoke();
     }
 }

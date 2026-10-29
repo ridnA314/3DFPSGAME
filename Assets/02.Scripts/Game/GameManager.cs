@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance => _instance;
 
     [SerializeField] private float _startTime;
+    public float StartTime => _startTime;
     [SerializeField] private Animator _playerAnimator;
 
     private GameState _state;
