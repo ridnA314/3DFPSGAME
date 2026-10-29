@@ -22,6 +22,21 @@ public class Player : MonoBehaviour, IDamageable
         _injuredLayerIndex = _animator.GetLayerIndex("Injured Layer");
     }
 
+    private void Update()
+    {
+        if (GameManager.Instance?.State != GameState.Playing) return;
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            _playerStat.LeftChangeMode();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            _playerStat.RightChangeMode();
+        }
+    }
+
     public void TakeDamage(DamageInfo damageInfo)
     {
         if (_playerStat.Health <= 0) return;

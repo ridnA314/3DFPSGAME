@@ -18,6 +18,9 @@ public class PlayerStat : MonoBehaviour
     private float _currentStamina;
     public float Stamina => _currentStamina;
 
+    private WeaponMode _weaponMode;
+    public WeaponMode WeaponMode => _weaponMode;
+
     private void Awake()
     {
         _currentHealth = _maxHealth;
@@ -63,5 +66,29 @@ public class PlayerStat : MonoBehaviour
 
         _currentHealth = Mathf.Clamp(_currentHealth + amount, 0, _maxHealth);
         UIManager.Instance?.RefreshPlayerHealthBar();
+    }
+
+    public void LeftChangeMode()
+    {
+        int changeMode = (int)_weaponMode - 1;
+        int count = Enum.GetNames(typeof(WeaponMode)).Length - 1;
+        if (changeMode < 0)
+        {
+            changeMode = count;
+        }
+
+        _weaponMode = (WeaponMode)changeMode;
+    }
+
+    public void RightChangeMode()
+    {
+        int changeMode = (int)_weaponMode + 1;
+        int count = Enum.GetNames(typeof(WeaponMode)).Length - 1;
+        if (changeMode > count)
+        {
+            changeMode = 0;
+        }
+
+        _weaponMode = (WeaponMode)changeMode;
     }
 }

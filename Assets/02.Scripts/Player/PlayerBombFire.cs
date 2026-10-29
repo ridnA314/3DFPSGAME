@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerBombFire : MonoBehaviour
 {
+    private PlayerStat _playerStat;
+
     [SerializeField] private Transform _firePoint;
     [SerializeField] private Bomb _bombPrefab;
     [SerializeField] private float _throwPower = 6f;
@@ -28,6 +30,7 @@ public class PlayerBombFire : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponentInChildren<Animator>();
+        _playerStat = GetComponent<PlayerStat>();
     }
 
     private void Start()
@@ -40,20 +43,22 @@ public class PlayerBombFire : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButtonDown("Fire2"))
+        bool isBomb = _playerStat.WeaponMode == WeaponMode.Normal;
+        if (Input.GetButtonDown("Fire2") && isBomb)
         {
             _isCharging = true;
         }
 
         Charge();
 
-        if (Input.GetButtonUp("Fire2"))
+        if (Input.GetButtonUp("Fire2") && isBomb)
         {
             _isCharging = false;
             if (!_isThrowing && _remainingBomb > 0)
             {
                 StartCoroutine(Throw_Coroutine(_chargeGauge));
             }
+
             _chargeGauge = 0f;
             UIManager.Instance?.RefreshBombGauge();
         }
