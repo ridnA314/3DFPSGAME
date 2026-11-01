@@ -4453,7 +4453,7 @@ MonoBehaviour:
   - {fileID: 1378969579}
   _flashTime: 0.05
   _tracerLine: {fileID: 0}
-  _muzzlePoint: {fileID: 0}
+  _muzzlePoint: {fileID: 59300203}
   _tracerMaterial: {fileID: 0}
   _tracerColor: {r: 1, g: 0.9, b: 0.4, a: 1}
   _tracerWidth: 0.03
@@ -4827,6 +4827,8 @@ MonoBehaviour:
     IconImage: {fileID: 21300000, guid: fa98b2adaba155a419d424cf3216da21, type: 3}
   - Mode: 1
     IconImage: {fileID: 21300000, guid: eab51e3b3c321c44ea233fa47645c643, type: 3}
+  - Mode: 2
+    IconImage: {fileID: 21300000, guid: 1897a12755ab61045bb517aa9880be55, type: 3}
   _weaponIcon: {fileID: 128770207}
 --- !u!1 &1506525270
 GameObject:
