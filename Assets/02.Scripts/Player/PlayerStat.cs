@@ -1,6 +1,12 @@
 using System;
 using UnityEngine;
 
+public enum MeleeHitMode
+{
+    Collider,
+    Fan
+}
+
 public class PlayerStat : MonoBehaviour
 {
     [SerializeField] private float _maxHealth;
@@ -22,6 +28,7 @@ public class PlayerStat : MonoBehaviour
     public WeaponMode WeaponMode => _weaponMode;
 
     public event Action ChangedWeapon;
+    public event Action<WeaponMode> OnWeaponModeChanged;
 
     private void Awake()
     {
