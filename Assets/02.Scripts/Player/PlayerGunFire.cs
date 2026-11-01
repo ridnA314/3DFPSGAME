@@ -21,6 +21,7 @@ public class PlayerGunFire : MonoBehaviour
 
     [Header("Bullet Tracer")]
     [SerializeField] private LineRenderer _tracerLine;
+
     [SerializeField] private Transform _muzzlePoint;
     [SerializeField] private Material _tracerMaterial;
     [SerializeField] private Color _tracerColor = new Color(1f, 0.9f, 0.4f, 1f);
@@ -30,8 +31,8 @@ public class PlayerGunFire : MonoBehaviour
     private int _remainingAmmo;
     public int RemainingAmmo => _remainingAmmo;
 
-    private const float _fireInterval = 1f;
-    private const float _reloadTime = 10f;
+    private const float FireInterval = 1f;
+    private const float ReloadTime = 10f;
     private float _timer;
     private Coroutine _reloadCoroutine;
     private Coroutine _tracerCoroutine;
@@ -59,7 +60,7 @@ public class PlayerGunFire : MonoBehaviour
         _timer += Time.deltaTime * _fireRate;
         //1. mouse left click
         bool isMouseVisible = Cursor.visible;
-        if (!isMouseVisible && Input.GetButton("Fire1") && _timer >= _fireInterval && _remainingAmmo > 0)
+        if (!isMouseVisible && Input.GetButton("Fire1") && _timer >= FireInterval && _remainingAmmo > 0)
         {
             _timer = 0f;
             _remainingAmmo--;
@@ -89,7 +90,7 @@ public class PlayerGunFire : MonoBehaviour
     private IEnumerator Reloading_Coroutine()
     {
         GameLogger.Log("Start Reload");
-        yield return new WaitForSeconds(_reloadTime / _reloadSpeed);
+        yield return new WaitForSeconds(ReloadTime / _reloadSpeed);
 
         _remainingAmmo = _magazineSize;
         Fired?.Invoke();
@@ -149,7 +150,8 @@ public class PlayerGunFire : MonoBehaviour
         _tracerLine.endColor = _tracerColor;
         _tracerLine.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         _tracerLine.receiveShadows = false;
-        _tracerLine.sharedMaterial = _tracerMaterial != null ? _tracerMaterial : new Material(Shader.Find("Sprites/Default"));
+        _tracerLine.sharedMaterial =
+            _tracerMaterial != null ? _tracerMaterial : new Material(Shader.Find("Sprites/Default"));
         _tracerLine.enabled = false;
     }
 
@@ -163,6 +165,7 @@ public class PlayerGunFire : MonoBehaviour
         {
             StopCoroutine(_tracerCoroutine);
         }
+
         _tracerCoroutine = StartCoroutine(Tracer_Coroutine());
     }
 
@@ -173,6 +176,7 @@ public class PlayerGunFire : MonoBehaviour
         {
             return _muzzleFlashes[0].transform.position;
         }
+
         return Camera.main.transform.position;
     }
 
