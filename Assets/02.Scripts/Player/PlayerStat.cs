@@ -88,6 +88,7 @@ public class PlayerStat : MonoBehaviour
 
         _weaponMode = (WeaponMode)changeMode;
         ChangedWeapon?.Invoke();
+        OnWeaponModeChanged?.Invoke(_weaponMode);
     }
 
     public void RightChangeMode()
@@ -101,5 +102,6 @@ public class PlayerStat : MonoBehaviour
 
         _weaponMode = (WeaponMode)changeMode;
         ChangedWeapon?.Invoke();
+        OnWeaponModeChanged?.Invoke(_weaponMode);
     }
 }
