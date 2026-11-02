@@ -6,6 +6,7 @@ public class ZombieHealthBar : MonoBehaviour
     [SerializeField] private Slider _slider;
 
     private Zombie _zombie;
+    private Transform _cameraTransform;
 
     private void Awake()
     {
@@ -14,6 +15,7 @@ public class ZombieHealthBar : MonoBehaviour
 
     private void Start()
     {
+        _cameraTransform = Camera.main.transform;
         _zombie.OnDamaged += RefreshHealthBar;
         RefreshHealthBar();
     }
@@ -21,7 +23,7 @@ public class ZombieHealthBar : MonoBehaviour
     private void LateUpdate()
     {
         //billboard : let health bar forward to camera
-        _slider.transform.forward = Camera.main.transform.forward;
+        _slider.transform.forward = _cameraTransform.forward;
     }
 
     private void RefreshHealthBar()
