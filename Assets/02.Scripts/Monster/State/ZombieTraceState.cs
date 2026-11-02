@@ -3,8 +3,19 @@ using UnityEngine;
 // chase to player
 public class ZombieTraceState : ZombieStateBase
 {
+    // re-requesting the path every frame is wasteful, the player barely moves in 0.2s
+    private const float DestinationUpdateInterval = 0.2f;
+
+    private float _destinationTimer;
+
     public ZombieTraceState(Zombie zombie) : base(zombie)
     {
+    }
+
+    public override void Enter()
+    {
+        // update the destination on the first Tick
+        _destinationTimer = DestinationUpdateInterval;
     }
 
     public override void Tick()
@@ -27,6 +38,11 @@ public class ZombieTraceState : ZombieStateBase
             return;
         }
 
-        Zombie.Agent.SetDestination(Zombie.Player.transform.position);
+        _destinationTimer += Time.deltaTime;
+        if (_destinationTimer >= DestinationUpdateInterval)
+        {
+            _destinationTimer = 0f;
+            Zombie.Agent.SetDestination(Zombie.Player.transform.position);
+        }
     }
 }
