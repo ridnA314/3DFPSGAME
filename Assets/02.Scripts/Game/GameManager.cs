@@ -90,6 +90,7 @@ public class GameManager : SingletoneBehaviour<GameManager>
         _state = GameState.GameOver;
         UIManager.Instance?.SetActiveStateText(true);
         _gameoverPopup.SetActive(true);
+        CursorManager.Instance?.UnLockCursor();
         //UIManager.Instance?.SetGameOverText();
 
         _playerAnimator.SetFloat("MoveMotion", 0f);
