@@ -33,6 +33,9 @@ public class UI_GlitchText : MonoBehaviour
     [SerializeField] private Color _ghostColorA = new Color(1f, 0.16f, 0.24f, 0.75f);
     [SerializeField] private Color _ghostColorB = new Color(0.16f, 0.9f, 1f, 0.75f);
 
+    // 글리치가 시작될 때 호출된다. 인자는 인트로 여부.
+    public event System.Action<bool> BurstStarted;
+
     private TextMeshProUGUI _text;
     private CanvasGroup _glitchLayer;
     private TextMeshProUGUI _ghostA;
@@ -66,12 +69,12 @@ public class UI_GlitchText : MonoBehaviour
     {
         _text.canvasRenderer.SetAlpha(0f);
 
-        yield return new WaitForSecondsRealtime(_startDelay);
+        yield return UIWait.Seconds_Coroutine(_startDelay);
         yield return Burst_Coroutine(_introDuration, true);
 
         while (_loop)
         {
-            yield return new WaitForSecondsRealtime(Random.Range(_intervalMin, _intervalMax));
+            yield return UIWait.Seconds_Coroutine(Random.Range(_intervalMin, _intervalMax));
             yield return Burst_Coroutine(_burstDuration, false);
         }
     }
@@ -82,6 +85,7 @@ public class UI_GlitchText : MonoBehaviour
         SyncCopies();
         _text.canvasRenderer.SetAlpha(0f);
         _glitchLayer.gameObject.SetActive(true);
+        BurstStarted?.Invoke(fadeIn);
 
         float elapsed = 0f;
         float nextShuffle = 0f;
@@ -152,6 +156,8 @@ public class UI_GlitchText : MonoBehaviour
             band.gameObject.AddComponent<RectMask2D>();
 
             TextMeshProUGUI copy = CreateCopy("Text", band, _text.color);
+            copy.enableVertexGradient = _text.enableVertexGradient;
+            copy.colorGradient = _text.colorGradient;
             RectTransform copyRect = copy.rectTransform;
             copyRect.anchorMin = new Vector2(0f, -i);
             copyRect.anchorMax = new Vector2(1f, _sliceCount - i);
@@ -177,6 +183,8 @@ public class UI_GlitchText : MonoBehaviour
         copy.textWrappingMode = _text.textWrappingMode;
         copy.overflowMode = _text.overflowMode;
         copy.margin = _text.margin;
+        copy.horizontalMapping = _text.horizontalMapping;
+        copy.verticalMapping = _text.verticalMapping;
         copy.color = color;
         copy.raycastTarget = false;
         copy.text = _text.text;

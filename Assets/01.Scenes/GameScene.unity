@@ -2163,6 +2163,7 @@ GameObject:
   - component: {fileID: 97349674}
   - component: {fileID: 97349673}
   - component: {fileID: 97349672}
+  - component: {fileID: 97349676}
   m_Layer: 5
   m_Name: RestartButton
   m_TagString: Untagged
@@ -2347,6 +2348,24 @@ MonoBehaviour:
   m_EffectColor: {r: 0.9411765, g: 0.41568628, b: 0.16470589, a: 1}
   m_EffectDistance: {x: 4, y: -4}
   m_UseGraphicAlpha: 1
+--- !u!114 &97349676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97349667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f89638b813d6e742893bc78d6f071ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  _source: {fileID: 356718555}
+  _selectable: {fileID: 97349669}
+  _hoverClip: {fileID: 8300000, guid: be6389d15ae09c540a04eab9734e42cd, type: 3}
+  _clickClip: {fileID: 8300000, guid: 4f0371162db2c22428335ad9d8bd96e1, type: 3}
+  _hoverVolume: 0.35
+  _clickVolume: 0.8
 --- !u!1001 &102277198
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6390,6 +6409,135 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4000011765245650, guid: 9732a241b7bd0fa4a8e59553d6d8a2b0, type: 3}
   m_PrefabInstance: {fileID: 353624014}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &356718554
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 356718556}
+  - component: {fileID: 356718555}
+  m_Layer: 0
+  m_Name: UIAudio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &356718555
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356718554}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &356718556
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356718554}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &366531817
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7282,6 +7430,7 @@ GameObject:
   - component: {fileID: 399270737}
   - component: {fileID: 399270741}
   - component: {fileID: 399270740}
+  - component: {fileID: 399270742}
   m_Layer: 5
   m_Name: ExitButton
   m_TagString: Untagged
@@ -7435,6 +7584,24 @@ MonoBehaviour:
   m_EffectColor: {r: 0.9411765, g: 0.41568628, b: 0.16470589, a: 1}
   m_EffectDistance: {x: 4, y: -4}
   m_UseGraphicAlpha: 1
+--- !u!114 &399270742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399270735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f89638b813d6e742893bc78d6f071ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  _source: {fileID: 356718555}
+  _selectable: {fileID: 399270737}
+  _hoverClip: {fileID: 8300000, guid: be6389d15ae09c540a04eab9734e42cd, type: 3}
+  _clickClip: {fileID: 8300000, guid: 4f0371162db2c22428335ad9d8bd96e1, type: 3}
+  _hoverVolume: 0.35
+  _clickVolume: 0.8
 --- !u!1 &400387243
 GameObject:
   m_ObjectHideFlags: 0
@@ -16816,6 +16983,7 @@ GameObject:
   - component: {fileID: 968634576}
   - component: {fileID: 968634580}
   - component: {fileID: 968634579}
+  - component: {fileID: 968634581}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -16969,6 +17137,24 @@ MonoBehaviour:
   m_EffectColor: {r: 0.9411765, g: 0.41568628, b: 0.16470589, a: 1}
   m_EffectDistance: {x: 4, y: -4}
   m_UseGraphicAlpha: 1
+--- !u!114 &968634581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968634572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f89638b813d6e742893bc78d6f071ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  _source: {fileID: 356718555}
+  _selectable: {fileID: 968634576}
+  _hoverClip: {fileID: 8300000, guid: be6389d15ae09c540a04eab9734e42cd, type: 3}
+  _clickClip: {fileID: 8300000, guid: 4f0371162db2c22428335ad9d8bd96e1, type: 3}
+  _hoverVolume: 0.35
+  _clickVolume: 0.8
 --- !u!1 &979624173
 GameObject:
   m_ObjectHideFlags: 0
@@ -16985,6 +17171,7 @@ GameObject:
   - component: {fileID: 979624182}
   - component: {fileID: 979624181}
   - component: {fileID: 979624180}
+  - component: {fileID: 979624184}
   m_Layer: 5
   m_Name: ContinueButton
   m_TagString: Untagged
@@ -17169,6 +17356,24 @@ MonoBehaviour:
   m_EffectColor: {r: 0.9411765, g: 0.41568628, b: 0.16470589, a: 1}
   m_EffectDistance: {x: 4, y: -4}
   m_UseGraphicAlpha: 1
+--- !u!114 &979624184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979624173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f89638b813d6e742893bc78d6f071ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  _source: {fileID: 356718555}
+  _selectable: {fileID: 979624177}
+  _hoverClip: {fileID: 8300000, guid: be6389d15ae09c540a04eab9734e42cd, type: 3}
+  _clickClip: {fileID: 8300000, guid: 4f0371162db2c22428335ad9d8bd96e1, type: 3}
+  _hoverVolume: 0.35
+  _clickVolume: 0.8
 --- !u!1 &994404886
 GameObject:
   m_ObjectHideFlags: 0
@@ -28373,6 +28578,8 @@ GameObject:
   - component: {fileID: 1704548363}
   - component: {fileID: 1704548362}
   - component: {fileID: 1704548364}
+  - component: {fileID: 1704548366}
+  - component: {fileID: 1704548365}
   m_Layer: 5
   m_Name: TitleText
   m_TagString: Untagged
@@ -28527,6 +28734,120 @@ MonoBehaviour:
   _jitter: 2
   _ghostColorA: {r: 1, g: 0.16, b: 0.24, a: 0.75}
   _ghostColorB: {r: 0.16, g: 0.9, b: 1, a: 0.75}
+--- !u!82 &1704548365
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704548360}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1704548366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704548360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fd968f564b10e048be245b4433f7dbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_GlitchSound
+  _glitchText: {fileID: 1704548364}
+  _source: {fileID: 1704548365}
+  _clip: {fileID: 8300000, guid: c3fe64ff2a2bd8f4680bd93116643581, type: 3}
+  _volume: 0.45
+  _pitchRange: {x: 0.9, y: 1.1}
 --- !u!1001 &1713845531
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36307,6 +36628,7 @@ GameObject:
   - component: {fileID: 2138706012}
   - component: {fileID: 2138706016}
   - component: {fileID: 2138706015}
+  - component: {fileID: 2138706017}
   m_Layer: 5
   m_Name: RestartButton
   m_TagString: Untagged
@@ -36460,6 +36782,24 @@ MonoBehaviour:
   m_EffectColor: {r: 0.9411765, g: 0.41568628, b: 0.16470589, a: 1}
   m_EffectDistance: {x: 4, y: -4}
   m_UseGraphicAlpha: 1
+--- !u!114 &2138706017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2138706008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f89638b813d6e742893bc78d6f071ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  _source: {fileID: 356718555}
+  _selectable: {fileID: 2138706012}
+  _hoverClip: {fileID: 8300000, guid: be6389d15ae09c540a04eab9734e42cd, type: 3}
+  _clickClip: {fileID: 8300000, guid: 4f0371162db2c22428335ad9d8bd96e1, type: 3}
+  _hoverVolume: 0.35
+  _clickVolume: 0.8
 --- !u!1001 &2140522442
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36803,3 +37143,4 @@ SceneRoots:
   - {fileID: 998269029}
   - {fileID: 4215836642218293439}
   - {fileID: 67322555}
+  - {fileID: 356718556}

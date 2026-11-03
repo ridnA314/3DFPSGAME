@@ -36,7 +36,7 @@ public class UI_ShineSweep : MonoBehaviour
 
     private IEnumerator Sweep_Coroutine()
     {
-        yield return new WaitForSecondsRealtime(_startDelay);
+        yield return UIWait.Seconds_Coroutine(_startDelay);
 
         while (true)
         {
@@ -55,7 +55,7 @@ public class UI_ShineSweep : MonoBehaviour
             }
 
             _shine.gameObject.SetActive(false);
-            yield return new WaitForSecondsRealtime(_interval);
+            yield return UIWait.Seconds_Coroutine(_interval);
         }
     }
 }

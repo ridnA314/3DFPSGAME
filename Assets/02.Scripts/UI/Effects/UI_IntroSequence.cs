@@ -70,7 +70,7 @@ public class UI_IntroSequence : MonoBehaviour
         _fadeOverlay.blocksRaycasts = false;
         _fadeOverlay.gameObject.SetActive(false);
 
-        yield return new WaitForSecondsRealtime(_revealDelay);
+        yield return UIWait.Seconds_Coroutine(_revealDelay);
         yield return Reveal_Coroutine(_loginPanel, _loginItems);
         _transitionRoutine = null;
     }
