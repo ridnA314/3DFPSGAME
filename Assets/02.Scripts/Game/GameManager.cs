@@ -5,6 +5,7 @@ public enum GameState
 {
     Ready,
     Playing,
+    Pause,
     GameOver,
 }
 
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float _startTime;
     public float StartTime => _startTime;
     [SerializeField] private Animator _playerAnimator;
+    [SerializeField] private GameObject _optionPopup;
 
     private GameState _state;
     public GameState State => _state;
@@ -42,10 +44,32 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        _optionPopup.SetActive(false);
         _state = GameState.Ready;
         _currentStageId = 1;
 
         StartCoroutine(StartSequence_Coroutine());
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (_state == GameState.Playing)
+            {
+                _state = GameState.Pause;
+                Time.timeScale = 0f;
+                _optionPopup.SetActive(true);
+                CursorManager.Instance?.UnLockCursor();
+            }
+            else if (_state == GameState.Pause)
+            {
+                _state = GameState.Playing;
+                Time.timeScale = 1f;
+                _optionPopup.SetActive(false);
+                CursorManager.Instance?.LockCursor();
+            }
+        }
     }
 
     public bool IsPlaying()
