@@ -1,20 +1,10 @@
 using UnityEngine;
 
-public class CursorManager : MonoBehaviour
+public class CursorManager : SingletoneBehaviour<CursorManager>
 {
-    private static CursorManager _instance;
-    public static CursorManager Instance => _instance;
-
-    private void Awake()
+    protected override void Awake()
     {
-        if (_instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        _instance = this;
-
+        base.Awake();
         LockCursor();
     }
 

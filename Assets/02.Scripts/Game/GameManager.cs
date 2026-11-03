@@ -9,11 +9,8 @@ public enum GameState
     GameOver,
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager : SingletoneBehaviour<GameManager>
 {
-    private static GameManager _instance;
-    public static GameManager Instance => _instance;
-
     [SerializeField] private float _startTime;
     public float StartTime => _startTime;
     [SerializeField] private Animator _playerAnimator;
@@ -28,18 +25,10 @@ public class GameManager : MonoBehaviour
     private int _enemyCount;
     public int EnemyCount => _enemyCount;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (_instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        _instance = this;
+        base.Awake();
         _enemyCount = 0;
-
-        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()

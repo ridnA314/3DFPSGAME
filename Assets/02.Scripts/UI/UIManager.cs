@@ -2,11 +2,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : SingletoneBehaviour<UIManager>
 {
-    private static UIManager _instance;
-    public static UIManager Instance => _instance;
-
     [SerializeField] private TextMeshProUGUI _gameStateText;
     [SerializeField] private TextMeshProUGUI _remainingEnemyText;
 
@@ -20,17 +17,6 @@ public class UIManager : MonoBehaviour
     private const string GameOverText = "<color=#f00000>게임 오버</color>";
 
     private const string RemainingEnemyText = "{0} Stage : {1} / {2}";
-
-    private void Awake()
-    {
-        if (_instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        _instance = this;
-    }
 
     private void Start()
     {

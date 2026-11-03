@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ZombieSpawner : MonoBehaviour
+public class ZombieSpawner : SingletoneBehaviour<ZombieSpawner>
 {
-    private static ZombieSpawner _instance;
-    public static ZombieSpawner Instance => _instance;
-
     [SerializeField] private List<ZombieSpawnTable> _zombieSpawnTables;
     private Dictionary<int, ZombieSpawnTable> _spawnTables;
 
@@ -16,18 +13,6 @@ public class ZombieSpawner : MonoBehaviour
 
     private Coroutine _spawnCoroutine;
     private int _maxExtractCount = 50;
-
-    private void Awake()
-    {
-        if (_instance != null)
-        {
-            Destroy(this);
-            return;
-        }
-
-        _instance = this;
-        DontDestroyOnLoad(this);
-    }
 
     private void Start()
     {

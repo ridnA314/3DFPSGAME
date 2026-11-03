@@ -2,26 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class ZombiePoolManager : MonoBehaviour
+public class ZombiePoolManager : SingletoneBehaviour<ZombiePoolManager>
 {
-    private static ZombiePoolManager _instance;
-    public static ZombiePoolManager Instance => _instance;
-
     [SerializeField] private List<ZombieEntry> _zombieEntries;
     private Dictionary<ZombieType, ObjectPool<Zombie>> _zombiePools;
     [SerializeField] private Transform _zombieContainer;
-
-    private void Awake()
-    {
-        if (_instance != null)
-        {
-            Destroy(this);
-            return;
-        }
-
-        _instance = this;
-        DontDestroyOnLoad(this);
-    }
 
     private void Start()
     {

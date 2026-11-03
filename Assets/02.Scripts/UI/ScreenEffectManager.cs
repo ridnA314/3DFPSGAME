@@ -2,26 +2,11 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScreenEffectManager : MonoBehaviour
+public class ScreenEffectManager : SingletoneBehaviour<ScreenEffectManager>
 {
-    private static ScreenEffectManager _instance;
-    public static ScreenEffectManager Instance => _instance;
-
     [SerializeField] private Image _hitFlash;
     [SerializeField] private float _hitEffectDuration;
     [SerializeField] private float _flashAlpha;
-
-    private void Awake()
-    {
-        if (_instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        _instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
 
     private void Start()
     {
@@ -33,7 +18,7 @@ public class ScreenEffectManager : MonoBehaviour
         }
     }
 
-    public void ShowFlash()
+    private void ShowFlash()
     {
         SetAlpha(_flashAlpha);
 
@@ -48,7 +33,7 @@ public class ScreenEffectManager : MonoBehaviour
         _hitFlash.color = color;
     }
 
-    public IEnumerator FlashFadeOut_Coroutine()
+    private IEnumerator FlashFadeOut_Coroutine()
     {
         // 1. show that alpha value is 0.4
         float timer = 0f;
