@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -101,5 +102,31 @@ public class GameManager : SingletoneBehaviour<GameManager>
     {
         _enemyCount -= 1;
         UIManager.Instance?.RefreshEnemyCount(_enemyCount);
+    }
+
+    public void Resume()
+    {
+        _state = GameState.Playing;
+        Time.timeScale = 1f;
+        _optionPopup.SetActive(false);
+        CursorManager.Instance?.LockCursor();
+    }
+
+    public void Restart()
+    {
+        Time.timeScale = 1f;
+
+        // 유지 중인 매니저들은 이전 씬의 UI를 참조하므로 현재 씬과 함께 언로드하고, 새 씬의 매니저로 교체한다.
+        PersistentObjects.ReturnToActiveScene();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void Quit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
