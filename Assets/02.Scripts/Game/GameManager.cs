@@ -16,6 +16,7 @@ public class GameManager : SingletoneBehaviour<GameManager>
     public float StartTime => _startTime;
     [SerializeField] private Animator _playerAnimator;
     [SerializeField] private GameObject _optionPopup;
+    [SerializeField] private GameObject _gameoverPopup;
 
     private GameState _state;
     public GameState State => _state;
@@ -35,6 +36,7 @@ public class GameManager : SingletoneBehaviour<GameManager>
     private void Start()
     {
         _optionPopup.SetActive(false);
+        _gameoverPopup.SetActive(false);
         _state = GameState.Ready;
         _currentStageId = 1;
 
@@ -87,7 +89,8 @@ public class GameManager : SingletoneBehaviour<GameManager>
     {
         _state = GameState.GameOver;
         UIManager.Instance?.SetActiveStateText(true);
-        UIManager.Instance?.SetGameOverText();
+        _gameoverPopup.SetActive(true);
+        //UIManager.Instance?.SetGameOverText();
 
         _playerAnimator.SetFloat("MoveMotion", 0f);
     }

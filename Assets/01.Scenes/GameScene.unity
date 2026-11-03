@@ -2001,6 +2001,7 @@ MonoBehaviour:
   _startTime: 2
   _playerAnimator: {fileID: 1574200875}
   _optionPopup: {fileID: 662321881}
+  _gameoverPopup: {fileID: 773978428}
 --- !u!1001 &96080320
 PrefabInstance:
   m_ObjectHideFlags: 0
