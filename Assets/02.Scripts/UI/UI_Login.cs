@@ -30,11 +30,14 @@ public class UI_Login : MonoBehaviour
     [Header("Etc")]
     [SerializeField] private TextMeshProUGUI _messageText;
 
-    private Mode _mode = Mode.Login;
+    private Mode _mode;
+
+    private PlayerPrefsAccountRepository _repository;
 
     private void Start()
     {
         ApplyMode(Mode.Login);
+        _repository = new PlayerPrefsAccountRepository();
     }
 
     public void GotoLogin()
@@ -54,11 +57,17 @@ public class UI_Login : MonoBehaviour
 
         if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(password))
         {
-            _messageText.text = "아이디와 비밀번호를 입력해 주세요.";
+            _messageText.text = "Please enter a ID/Password";
             return;
         }
 
-        SceneManager.LoadScene(GameSceneName);
+        if (_repository.CheckPassword(id, password))
+        {
+            SceneManager.LoadScene(GameSceneName);
+            return;
+        }
+
+        _messageText.text = "Please check your id & password";
     }
 
     public void Register()
@@ -74,18 +83,26 @@ public class UI_Login : MonoBehaviour
 
         if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(password))
         {
-            _messageText.text = "아이디와 비밀번호를 입력해 주세요.";
+            _messageText.text = "Please enter a ID/Password";
             return;
         }
 
         if (password != passwordConfirm)
         {
-            _messageText.text = "incorrect password confirmation.";
+            _messageText.text = "Incorrect password confirmation";
             return;
         }
 
         // ToDo. ID duplicate check
+        if (_repository.Exists(id))
+        {
+            _messageText.text = "ID/Password already exists";
+            return;
+        }
+
         // ToDo. save register data
+        _repository.Register(id, password);
+
         GotoLogin();
         _messageText.text = "Success Register! Please Login";
     }
