@@ -36,14 +36,14 @@ public class UI_Login : MonoBehaviour
     private PlayerPrefsAccountRepository _repository;
 
     private AccountIdSpecification _idSpecification;
-    private AccountIdSpecification _passwordSpecification;
+    private AccountPasswordSpecification _passwordSpecification;
 
     private void Start()
     {
         ApplyMode(Mode.Login);
         _repository = new PlayerPrefsAccountRepository();
         _idSpecification = new AccountIdSpecification();
-        _passwordSpecification = new AccountIdSpecification();
+        _passwordSpecification = new AccountPasswordSpecification();
     }
 
     public void GotoLogin()
