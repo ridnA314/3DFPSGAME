@@ -1,18 +1,16 @@
 using System.Collections;
 using UnityEngine;
 
-// 로그인 씬 인트로(검은 화면 페이드 → 패널 요소 순차 등장)와 로그인 ↔ 회원가입 패널 전환 연출.
+// 로그인 씬 인트로(검은 화면 페이드 → 패널 요소 순차 등장) 연출.
 public class UI_IntroSequence : MonoBehaviour
 {
     [Header("Fade")]
     [SerializeField] private CanvasGroup _fadeOverlay;
     [SerializeField] private float _fadeDuration = 0.8f;
 
-    [Header("Panels")]
+    [Header("Panel")]
     [SerializeField] private CanvasGroup _loginPanel;
-    [SerializeField] private CanvasGroup _registerPanel;
     [SerializeField] private float _revealDelay = 1.4f;
-    [SerializeField] private float _panelFadeDuration = 0.2f;
 
     [Header("Items")]
     [SerializeField] private float _itemDuration = 0.35f;
@@ -20,19 +18,16 @@ public class UI_IntroSequence : MonoBehaviour
     [SerializeField] private float _itemSlideDistance = 40f;
 
     private PanelItems _loginItems;
-    private PanelItems _registerItems;
     private Coroutine _transitionRoutine;
 
     private void Awake()
     {
         _loginItems = new PanelItems(_loginPanel.transform);
-        _registerItems = new PanelItems(_registerPanel.transform);
     }
 
     // 다른 컴포넌트들의 Awake()가 끝난 뒤 초기 위치를 바꾸기 위해 Start()에서 시작한다.
     private void Start()
     {
-        _registerPanel.gameObject.SetActive(false);
         _loginPanel.gameObject.SetActive(true);
         _loginItems.Hide(_itemSlideDistance);
         SetPanelInteractable(_loginPanel, false);
@@ -44,26 +39,6 @@ public class UI_IntroSequence : MonoBehaviour
         _transitionRoutine = StartCoroutine(Intro_Coroutine());
     }
 
-    public void ShowLoginPanel()
-    {
-        SwitchPanel(_registerPanel, _loginPanel, _loginItems);
-    }
-
-    public void ShowRegisterPanel()
-    {
-        SwitchPanel(_loginPanel, _registerPanel, _registerItems);
-    }
-
-    private void SwitchPanel(CanvasGroup from, CanvasGroup to, PanelItems toItems)
-    {
-        if (_transitionRoutine != null)
-        {
-            StopCoroutine(_transitionRoutine);
-        }
-
-        _transitionRoutine = StartCoroutine(SwitchPanel_Coroutine(from, to, toItems));
-    }
-
     private IEnumerator Intro_Coroutine()
     {
         yield return Fade_Coroutine(_fadeOverlay, 1f, 0f, _fadeDuration);
@@ -72,20 +47,6 @@ public class UI_IntroSequence : MonoBehaviour
 
         yield return UIWait.Seconds_Coroutine(_revealDelay);
         yield return Reveal_Coroutine(_loginPanel, _loginItems);
-        _transitionRoutine = null;
-    }
-
-    private IEnumerator SwitchPanel_Coroutine(CanvasGroup from, CanvasGroup to, PanelItems toItems)
-    {
-        SetPanelInteractable(from, false);
-        yield return Fade_Coroutine(from, from.alpha, 0f, _panelFadeDuration);
-        from.gameObject.SetActive(false);
-        from.alpha = 1f;
-
-        to.gameObject.SetActive(true);
-        toItems.Hide(_itemSlideDistance);
-        SetPanelInteractable(to, false);
-        yield return Reveal_Coroutine(to, toItems);
         _transitionRoutine = null;
     }
 
