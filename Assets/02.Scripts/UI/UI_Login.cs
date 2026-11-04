@@ -37,6 +37,16 @@ public class UI_Login : MonoBehaviour
         ApplyMode(Mode.Login);
     }
 
+    public void GotoLogin()
+    {
+        ApplyMode(Mode.Login);
+    }
+
+    public void GotoRegister()
+    {
+        ApplyMode(Mode.Register);
+    }
+
     public void Login()
     {
         string id = _idInputField.text;
@@ -53,18 +63,38 @@ public class UI_Login : MonoBehaviour
 
     public void Register()
     {
+        string id = _idInputField.text;
+        string password = _passwordInputField.text;
+        string passwordConfirm = _passwordConfirmInputField.text;
+
+        if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(password))
+        {
+            _messageText.text = "아이디와 비밀번호를 입력해 주세요.";
+            return;
+        }
+
+        if (password != passwordConfirm)
+        {
+            _messageText.text = "incorrect password confirmation.";
+            return;
+        }
+
+        // ToDo. ID duplicate check
+        // ToDo. save register data
+        GotoLogin();
+        _messageText.text = "Success Register! Please Login";
     }
 
     private void ApplyMode(Mode mode)
     {
         _mode = mode;
-        bool isLogin = mode == Mode.Login;
+        bool isLoginMode = mode == Mode.Login;
 
-        _passwordConfirmInputField.gameObject.SetActive(!isLogin);
-        _loginButton.gameObject.SetActive(isLogin);
-        _gotoRegisterButton.gameObject.SetActive(isLogin);
-        _registerButton.gameObject.SetActive(!isLogin);
-        _gotoLoginButton.gameObject.SetActive(!isLogin);
+        _passwordConfirmInputField.gameObject.SetActive(!isLoginMode);
+        _loginButton.gameObject.SetActive(isLoginMode);
+        _gotoRegisterButton.gameObject.SetActive(isLoginMode);
+        _registerButton.gameObject.SetActive(!isLoginMode);
+        _gotoLoginButton.gameObject.SetActive(!isLoginMode);
 
         _passwordInputField.text = string.Empty;
         _passwordConfirmInputField.text = string.Empty;
