@@ -67,6 +67,11 @@ public class UI_Login : MonoBehaviour
         string password = _passwordInputField.text;
         string passwordConfirm = _passwordConfirmInputField.text;
 
+        // ToDo. set rule about id and password
+        // ID is email form
+        // Password that its range of length is 7~15
+        // must be english and contains special letter and upper case letter less than one each
+
         if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(password))
         {
             _messageText.text = "아이디와 비밀번호를 입력해 주세요.";
